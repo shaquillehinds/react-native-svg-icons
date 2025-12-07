@@ -51,6 +51,9 @@
     "prepare": "bob build",
     "release": "release-it"
   },
+  "dependencies": {
+    "@shaquillehinds/react-native-essentials": "^1.7.25"
+  },
   "devDependencies": {
     "@commitlint/config-conventional": "^19.6.0",
     "@react-native/eslint-config": "^0.73.1",
