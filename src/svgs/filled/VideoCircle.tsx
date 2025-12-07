@@ -1,0 +1,18 @@
+import React from 'react';
+import Svg, {
+  Path,
+} from 'react-native-svg';
+import { normalize } from '@shaquillehinds/react-native-essentials';
+
+export default function VideoCircle({
+  size,
+  color,
+}: {
+  size?: number;
+  color?: string;
+}) {
+  return (<Svg width={normalize(size || 24)} height={normalize(size || 24)} viewBox="0 0 24 24" fill="none" >
+<Path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM14.66 13.73L13.38 14.47L12.1 15.21C10.45 16.16 9.1 15.38 9.1 13.48V12V10.52C9.1 8.61 10.45 7.84 12.1 8.79L13.38 9.53L14.66 10.27C16.31 11.22 16.31 12.78 14.66 13.73Z" fill={color || '#292D32'}/>
+</Svg>
+);
+}

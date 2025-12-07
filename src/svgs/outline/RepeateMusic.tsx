@@ -1,0 +1,20 @@
+import React from 'react';
+import Svg, {
+  Path,
+} from 'react-native-svg';
+import { normalize } from '@shaquillehinds/react-native-essentials';
+
+export default function RepeateMusic({
+  size,
+  color,
+}: {
+  size?: number;
+  color?: string;
+}) {
+  return (<Svg width={normalize(size || 24)} height={normalize(size || 24)} viewBox="0 0 24 24" fill="none" >
+<Path d="M14 3L16.44 5.34003L8.48999 5.32001C4.91999 5.32001 1.98999 8.25003 1.98999 11.84C1.98999 13.63 2.71998 15.26 3.89998 16.44" stroke={color || '#292D32'} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+<Path d="M10.0001 21.0001L7.56006 18.66L15.5101 18.6801C19.0801 18.6801 22.0101 15.75 22.0101 12.16C22.0101 10.37 21.2801 8.74006 20.1001 7.56006" stroke={color || '#292D32'} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+<Path d="M9 12H15" stroke={color || '#292D32'} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+</Svg>
+);
+}
