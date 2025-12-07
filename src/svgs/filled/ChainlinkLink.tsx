@@ -1,18 +1,31 @@
-import React from 'react';
-import Svg, {
-  Path,
-} from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
 import { normalize } from '@shaquillehinds/react-native-essentials';
+import type { PathProps, SvgProps } from 'react-native-svg';
 
 export default function ChainlinkLink({
   size,
   color,
+  svgProps,
+  pathProps,
 }: {
   size?: number;
   color?: string;
+  svgProps?: SvgProps;
+  pathProps?: PathProps;
 }) {
-  return (<Svg width={normalize(size || 24)} height={normalize(size || 24)} viewBox="0 0 24 24" fill="none" >
-<Path d="M3 8.18141V15.8314C3 16.4814 3.46 17.2614 4.03 17.5814L11.03 21.4714C11.56 21.7714 12.44 21.7714 12.97 21.4714L19.97 17.5814C20.54 17.2714 21 16.4814 21 15.8314V8.18141C21 7.53141 20.54 6.75141 19.97 6.43141L12.97 2.54141C12.44 2.24141 11.56 2.24141 11.03 2.54141L4.03 6.43141C3.46 6.74141 3 7.53141 3 8.18141Z" fill={color || 'black'}/>
-</Svg>
-);
+  return (
+    <Svg
+      width={normalize(size || 24)}
+      height={normalize(size || 24)}
+      viewBox="0 0 24 24"
+      fill="none"
+      {...svgProps}
+    >
+      <Path
+        d="M3 8.18141V15.8314C3 16.4814 3.46 17.2614 4.03 17.5814L11.03 21.4714C11.56 21.7714 12.44 21.7714 12.97 21.4714L19.97 17.5814C20.54 17.2714 21 16.4814 21 15.8314V8.18141C21 7.53141 20.54 6.75141 19.97 6.43141L12.97 2.54141C12.44 2.24141 11.56 2.24141 11.03 2.54141L4.03 6.43141C3.46 6.74141 3 7.53141 3 8.18141Z"
+        fill={color || 'black'}
+        {...pathProps}
+      />
+    </Svg>
+  );
 }

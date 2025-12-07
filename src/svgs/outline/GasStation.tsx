@@ -1,22 +1,66 @@
-import React from 'react';
-import Svg, {
-  Path,
-} from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
 import { normalize } from '@shaquillehinds/react-native-essentials';
+import type { PathProps, SvgProps } from 'react-native-svg';
 
 export default function GasStation({
   size,
   color,
+  svgProps,
+  pathProps,
 }: {
   size?: number;
   color?: string;
+  svgProps?: SvgProps;
+  pathProps?: PathProps;
 }) {
-  return (<Svg width={normalize(size || 24)} height={normalize(size || 24)} viewBox="0 0 24 24" fill="none" >
-<Path d="M3.5 22V5C3.5 3 4.84 2 6.5 2H14.5C16.16 2 17.5 3 17.5 5V22H3.5Z" stroke={color || '#292D32'} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-<Path d="M2 22H19" stroke={color || '#292D32'} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-<Path d="M8.39 9.99998H12.62C13.66 9.99998 14.51 9.49999 14.51 8.10999V6.87999C14.51 5.48999 13.66 4.98999 12.62 4.98999H8.39C7.35 4.98999 6.5 5.48999 6.5 6.87999V8.10999C6.5 9.49999 7.35 9.99998 8.39 9.99998Z" stroke={color || '#292D32'} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-<Path d="M6.5 13H9.5" stroke={color || '#292D32'} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-<Path d="M17.5 16.01L22 16V10L20 9" stroke={color || '#292D32'} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-</Svg>
-);
+  return (
+    <Svg
+      width={normalize(size || 24)}
+      height={normalize(size || 24)}
+      viewBox="0 0 24 24"
+      fill="none"
+      {...svgProps}
+    >
+      <Path
+        d="M3.5 22V5C3.5 3 4.84 2 6.5 2H14.5C16.16 2 17.5 3 17.5 5V22H3.5Z"
+        stroke={color || '#292D32'}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        {...pathProps}
+      />
+      <Path
+        d="M2 22H19"
+        stroke={color || '#292D32'}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        {...pathProps}
+      />
+      <Path
+        d="M8.39 9.99998H12.62C13.66 9.99998 14.51 9.49999 14.51 8.10999V6.87999C14.51 5.48999 13.66 4.98999 12.62 4.98999H8.39C7.35 4.98999 6.5 5.48999 6.5 6.87999V8.10999C6.5 9.49999 7.35 9.99998 8.39 9.99998Z"
+        stroke={color || '#292D32'}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        {...pathProps}
+      />
+      <Path
+        d="M6.5 13H9.5"
+        stroke={color || '#292D32'}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        {...pathProps}
+      />
+      <Path
+        d="M17.5 16.01L22 16V10L20 9"
+        stroke={color || '#292D32'}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        {...pathProps}
+      />
+    </Svg>
+  );
 }

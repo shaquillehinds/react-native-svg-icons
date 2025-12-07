@@ -1,20 +1,41 @@
-import React from 'react';
-import Svg, {
-  Path,
-} from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
 import { normalize } from '@shaquillehinds/react-native-essentials';
+import type { PathProps, SvgProps } from 'react-native-svg';
 
 export default function Element1({
   size,
   color,
+  svgProps,
+  pathProps,
 }: {
   size?: number;
   color?: string;
+  svgProps?: SvgProps;
+  pathProps?: PathProps;
 }) {
-  return (<Svg width={normalize(size || 24)} height={normalize(size || 24)} viewBox="0 0 24 24" fill="none" >
-<Path d="M11 19.9V4.1C11 2.6 10.36 2 8.77 2H4.73C3.14 2 2.5 2.6 2.5 4.1V19.9C2.5 21.4 3.14 22 4.73 22H8.77C10.36 22 11 21.4 11 19.9Z" fill={color || '#292D32'}/>
-<Path d="M21.5 10.9V4.1C21.5 2.6 20.86 2 19.27 2H15.23C13.64 2 13 2.6 13 4.1V10.9C13 12.4 13.64 13 15.23 13H19.27C20.86 13 21.5 12.4 21.5 10.9Z" fill={color || '#292D32'}/>
-<Path d="M21.5 19.9V17.1C21.5 15.6 20.86 15 19.27 15H15.23C13.64 15 13 15.6 13 17.1V19.9C13 21.4 13.64 22 15.23 22H19.27C20.86 22 21.5 21.4 21.5 19.9Z" fill={color || '#292D32'}/>
-</Svg>
-);
+  return (
+    <Svg
+      width={normalize(size || 24)}
+      height={normalize(size || 24)}
+      viewBox="0 0 24 24"
+      fill="none"
+      {...svgProps}
+    >
+      <Path
+        d="M11 19.9V4.1C11 2.6 10.36 2 8.77 2H4.73C3.14 2 2.5 2.6 2.5 4.1V19.9C2.5 21.4 3.14 22 4.73 22H8.77C10.36 22 11 21.4 11 19.9Z"
+        fill={color || '#292D32'}
+        {...pathProps}
+      />
+      <Path
+        d="M21.5 10.9V4.1C21.5 2.6 20.86 2 19.27 2H15.23C13.64 2 13 2.6 13 4.1V10.9C13 12.4 13.64 13 15.23 13H19.27C20.86 13 21.5 12.4 21.5 10.9Z"
+        fill={color || '#292D32'}
+        {...pathProps}
+      />
+      <Path
+        d="M21.5 19.9V17.1C21.5 15.6 20.86 15 19.27 15H15.23C13.64 15 13 15.6 13 17.1V19.9C13 21.4 13.64 22 15.23 22H19.27C20.86 22 21.5 21.4 21.5 19.9Z"
+        fill={color || '#292D32'}
+        {...pathProps}
+      />
+    </Svg>
+  );
 }

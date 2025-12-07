@@ -1,21 +1,61 @@
-import React from 'react';
-import Svg, {
-  Path,
-} from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
 import { normalize } from '@shaquillehinds/react-native-essentials';
+import type { PathProps, SvgProps } from 'react-native-svg';
 
 export default function Xd({
   size,
   color,
+  svgProps,
+  pathProps,
 }: {
   size?: number;
   color?: string;
+  svgProps?: SvgProps;
+  pathProps?: PathProps;
 }) {
-  return (<Svg width={normalize(size || 24)} height={normalize(size || 24)} viewBox="0 0 24 24" fill="none" >
-<Path d="M15 22H9C4 22 2 20 2 15V9C2 4 4 2 9 2H15C20 2 22 4 22 9V15C22 20 20 22 15 22Z" stroke={color || '#17191C'} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-<Path d="M17.9999 8.5V15.6H16.1999C15.1999 15.6 14.3999 14.8 14.3999 13.8C14.3999 12.8 15.1999 12 16.1999 12H17.9999" stroke={color || '#17191C'} strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-<Path d="M6 8.5L11.7 15.5" stroke={color || '#17191C'} strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-<Path d="M11.7 8.5L6 15.5" stroke={color || '#17191C'} strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-</Svg>
-);
+  return (
+    <Svg
+      width={normalize(size || 24)}
+      height={normalize(size || 24)}
+      viewBox="0 0 24 24"
+      fill="none"
+      {...svgProps}
+    >
+      <Path
+        d="M15 22H9C4 22 2 20 2 15V9C2 4 4 2 9 2H15C20 2 22 4 22 9V15C22 20 20 22 15 22Z"
+        stroke={color || '#17191C'}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        {...pathProps}
+      />
+      <Path
+        d="M17.9999 8.5V15.6H16.1999C15.1999 15.6 14.3999 14.8 14.3999 13.8C14.3999 12.8 15.1999 12 16.1999 12H17.9999"
+        stroke={color || '#17191C'}
+        strokeWidth="1.5"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        {...pathProps}
+      />
+      <Path
+        d="M6 8.5L11.7 15.5"
+        stroke={color || '#17191C'}
+        strokeWidth="1.5"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        {...pathProps}
+      />
+      <Path
+        d="M11.7 8.5L6 15.5"
+        stroke={color || '#17191C'}
+        strokeWidth="1.5"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        {...pathProps}
+      />
+    </Svg>
+  );
 }

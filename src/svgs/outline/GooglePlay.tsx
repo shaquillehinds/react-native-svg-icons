@@ -1,21 +1,62 @@
-import React from 'react';
-import Svg, {
-  Path,
-} from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
 import { normalize } from '@shaquillehinds/react-native-essentials';
+import type { PathProps, SvgProps } from 'react-native-svg';
 
 export default function GooglePlay({
   size,
   color,
+  svgProps,
+  pathProps,
 }: {
   size?: number;
   color?: string;
+  svgProps?: SvgProps;
+  pathProps?: PathProps;
 }) {
-  return (<Svg width={normalize(size || 24)} height={normalize(size || 24)} viewBox="0 0 24 24" fill="none" >
-<Path d="M21.4 12.9L16.9 15.2L13.7 12L16.9 8.80005L21.4 11C22.2 11.4 22.2 12.6 21.4 12.9Z" stroke={color || '#17191C'} strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-<Path d="M16.9 8.79996L13.7 12L4.1 21.6L3.5 21.9C2.8 22.3 2 21.7 2 20.9V3.09996C2 2.29996 2.8 1.79996 3.5 2.09996L16.9 8.79996Z" stroke={color || '#17191C'} strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-<Path d="M16.9001 15.2L4.1001 21.6L13.7001 12L16.9001 15.2Z" stroke={color || '#17191C'} strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-<Path d="M13.7001 11.9999L4.1001 2.3999" stroke={color || '#17191C'} strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-</Svg>
-);
+  return (
+    <Svg
+      width={normalize(size || 24)}
+      height={normalize(size || 24)}
+      viewBox="0 0 24 24"
+      fill="none"
+      {...svgProps}
+    >
+      <Path
+        d="M21.4 12.9L16.9 15.2L13.7 12L16.9 8.80005L21.4 11C22.2 11.4 22.2 12.6 21.4 12.9Z"
+        stroke={color || '#17191C'}
+        strokeWidth="1.5"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        {...pathProps}
+      />
+      <Path
+        d="M16.9 8.79996L13.7 12L4.1 21.6L3.5 21.9C2.8 22.3 2 21.7 2 20.9V3.09996C2 2.29996 2.8 1.79996 3.5 2.09996L16.9 8.79996Z"
+        stroke={color || '#17191C'}
+        strokeWidth="1.5"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        {...pathProps}
+      />
+      <Path
+        d="M16.9001 15.2L4.1001 21.6L13.7001 12L16.9001 15.2Z"
+        stroke={color || '#17191C'}
+        strokeWidth="1.5"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        {...pathProps}
+      />
+      <Path
+        d="M13.7001 11.9999L4.1001 2.3999"
+        stroke={color || '#17191C'}
+        strokeWidth="1.5"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        {...pathProps}
+      />
+    </Svg>
+  );
 }

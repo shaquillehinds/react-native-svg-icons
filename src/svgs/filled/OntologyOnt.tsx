@@ -1,19 +1,36 @@
-import React from 'react';
-import Svg, {
-  Path,
-} from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
 import { normalize } from '@shaquillehinds/react-native-essentials';
+import type { PathProps, SvgProps } from 'react-native-svg';
 
 export default function OntologyOnt({
   size,
   color,
+  svgProps,
+  pathProps,
 }: {
   size?: number;
   color?: string;
+  svgProps?: SvgProps;
+  pathProps?: PathProps;
 }) {
-  return (<Svg width={normalize(size || 24)} height={normalize(size || 24)} viewBox="0 0 24 24" fill="none" >
-<Path d="M17.9007 19.6786C16.1807 21.1786 13.9107 22.0686 11.4207 21.9986C6.25072 21.8586 2.2207 17.4086 2.2207 12.2386V5.20857C2.2207 4.75857 2.76071 4.53856 3.07071 4.85856L17.9007 19.6786Z" fill={color || 'black'}/>
-<Path d="M6.2207 4.29998C7.9307 2.80998 10.1807 1.92998 12.6507 1.99998C17.7807 2.13998 21.7707 6.54997 21.7707 11.68V18.64C21.7707 19.09 21.2307 19.31 20.9207 18.99L6.2207 4.29998Z" fill={color || 'black'}/>
-</Svg>
-);
+  return (
+    <Svg
+      width={normalize(size || 24)}
+      height={normalize(size || 24)}
+      viewBox="0 0 24 24"
+      fill="none"
+      {...svgProps}
+    >
+      <Path
+        d="M17.9007 19.6786C16.1807 21.1786 13.9107 22.0686 11.4207 21.9986C6.25072 21.8586 2.2207 17.4086 2.2207 12.2386V5.20857C2.2207 4.75857 2.76071 4.53856 3.07071 4.85856L17.9007 19.6786Z"
+        fill={color || 'black'}
+        {...pathProps}
+      />
+      <Path
+        d="M6.2207 4.29998C7.9307 2.80998 10.1807 1.92998 12.6507 1.99998C17.7807 2.13998 21.7707 6.54997 21.7707 11.68V18.64C21.7707 19.09 21.2307 19.31 20.9207 18.99L6.2207 4.29998Z"
+        fill={color || 'black'}
+        {...pathProps}
+      />
+    </Svg>
+  );
 }

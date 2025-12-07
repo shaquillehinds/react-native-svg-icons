@@ -1,19 +1,36 @@
-import React from 'react';
-import Svg, {
-  Path,
-} from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
 import { normalize } from '@shaquillehinds/react-native-essentials';
+import type { PathProps, SvgProps } from 'react-native-svg';
 
 export default function CeloCelo({
   size,
   color,
+  svgProps,
+  pathProps,
 }: {
   size?: number;
   color?: string;
+  svgProps?: SvgProps;
+  pathProps?: PathProps;
 }) {
-  return (<Svg width={normalize(size || 24)} height={normalize(size || 24)} viewBox="0 0 24 24" fill="none" >
-<Path d="M9 22C12.866 22 16 18.866 16 15C16 11.134 12.866 8 9 8C5.13401 8 2 11.134 2 15C2 18.866 5.13401 22 9 22Z" fill={color || 'black'}/>
-<Path d="M21.9998 9C21.9998 11.74 20.4299 14.11 18.1399 15.25C17.8299 15.41 17.4798 15.16 17.4498 14.82C17.1098 10.37 13.5998 6.89 9.17983 6.55C8.82983 6.52 8.58984 6.17 8.74984 5.86C9.88984 3.57 12.2598 2 14.9998 2C18.8698 2 21.9998 5.13 21.9998 9Z" fill={color || 'black'}/>
-</Svg>
-);
+  return (
+    <Svg
+      width={normalize(size || 24)}
+      height={normalize(size || 24)}
+      viewBox="0 0 24 24"
+      fill="none"
+      {...svgProps}
+    >
+      <Path
+        d="M9 22C12.866 22 16 18.866 16 15C16 11.134 12.866 8 9 8C5.13401 8 2 11.134 2 15C2 18.866 5.13401 22 9 22Z"
+        fill={color || 'black'}
+        {...pathProps}
+      />
+      <Path
+        d="M21.9998 9C21.9998 11.74 20.4299 14.11 18.1399 15.25C17.8299 15.41 17.4798 15.16 17.4498 14.82C17.1098 10.37 13.5998 6.89 9.17983 6.55C8.82983 6.52 8.58984 6.17 8.74984 5.86C9.88984 3.57 12.2598 2 14.9998 2C18.8698 2 21.9998 5.13 21.9998 9Z"
+        fill={color || 'black'}
+        {...pathProps}
+      />
+    </Svg>
+  );
 }

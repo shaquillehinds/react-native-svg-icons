@@ -1,19 +1,44 @@
-import React from 'react';
-import Svg, {
-  Path,
-} from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
 import { normalize } from '@shaquillehinds/react-native-essentials';
+import type { PathProps, SvgProps } from 'react-native-svg';
 
 export default function HuobiTokenHt({
   size,
   color,
+  svgProps,
+  pathProps,
 }: {
   size?: number;
   color?: string;
+  svgProps?: SvgProps;
+  pathProps?: PathProps;
 }) {
-  return (<Svg width={normalize(size || 24)} height={normalize(size || 24)} viewBox="0 0 24 24" fill="none" >
-<Path d="M16.1999 10C16.1999 10 15.9999 11 12.9999 15C10.0999 18.8 14.2999 21.6 14.7999 22H14.8999C15.4999 21.5 23.0999 16.7 16.1999 10Z" stroke={color || '#17191C'} strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-<Path d="M13.7998 7.80007C13.7998 5.50007 12.8998 3.40007 11.9998 2.20007C11.6998 1.90007 11.1998 2.00007 11.0998 2.40007C10.6998 3.90007 9.49981 7.10007 6.59981 10.9001C2.89981 15.7001 6.29981 20.9001 9.79981 21.9001C11.6998 22.4001 9.29981 20.9001 8.99981 17.8001C8.69981 13.9001 13.7998 11.0001 13.7998 7.80007Z" stroke={color || '#17191C'} strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-</Svg>
-);
+  return (
+    <Svg
+      width={normalize(size || 24)}
+      height={normalize(size || 24)}
+      viewBox="0 0 24 24"
+      fill="none"
+      {...svgProps}
+    >
+      <Path
+        d="M16.1999 10C16.1999 10 15.9999 11 12.9999 15C10.0999 18.8 14.2999 21.6 14.7999 22H14.8999C15.4999 21.5 23.0999 16.7 16.1999 10Z"
+        stroke={color || '#17191C'}
+        strokeWidth="1.5"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        {...pathProps}
+      />
+      <Path
+        d="M13.7998 7.80007C13.7998 5.50007 12.8998 3.40007 11.9998 2.20007C11.6998 1.90007 11.1998 2.00007 11.0998 2.40007C10.6998 3.90007 9.49981 7.10007 6.59981 10.9001C2.89981 15.7001 6.29981 20.9001 9.79981 21.9001C11.6998 22.4001 9.29981 20.9001 8.99981 17.8001C8.69981 13.9001 13.7998 11.0001 13.7998 7.80007Z"
+        stroke={color || '#17191C'}
+        strokeWidth="1.5"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        {...pathProps}
+      />
+    </Svg>
+  );
 }

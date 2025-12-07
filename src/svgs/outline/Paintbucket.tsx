@@ -1,20 +1,27 @@
 import { normalize } from '@shaquillehinds/react-native-essentials';
-import React from 'react';
+import type { PathProps, SvgProps } from 'react-native-svg';
+
 import Svg, { ClipPath, Defs, G, Path, Rect } from 'react-native-svg';
 
 export default function Paintbucket({
   size,
   color,
+  svgProps,
+  pathProps,
 }: {
   size?: number;
   color?: string;
+  svgProps?: SvgProps;
+  pathProps?: PathProps;
 }) {
   return (
     <Svg
       width={normalize(size || 24)}
       height={normalize(size || 24)}
       viewBox="0 0 24 24"
-      fill="none">
+      fill="none"
+      {...svgProps}
+    >
       <G clipPath="url(#clip0_3125_33407)">
         <Path
           d="M3.77 15.56L7.23 19.02C9.66 21.45 10.49 21.41 12.89 19.02L18.46 13.45C20.4 11.51 20.89 10.22 18.46 7.78996L15 4.32996C12.41 1.73996 11.28 2.38996 9.34 4.32996L3.77 9.89996C1.38 12.3 1.18 12.97 3.77 15.56Z"
@@ -22,6 +29,7 @@ export default function Paintbucket({
           strokeWidth="1.5"
           strokeLinecap="round"
           strokeLinejoin="round"
+          {...pathProps}
         />
         <Path
           d="M19.2 16.79L18.54 17.88C17.61 19.43 18.33 20.7 20.14 20.7C21.95 20.7 22.67 19.43 21.74 17.88L21.08 16.79C20.56 15.93 19.71 15.93 19.2 16.79Z"
@@ -29,6 +37,7 @@ export default function Paintbucket({
           strokeWidth="1.5"
           strokeLinecap="round"
           strokeLinejoin="round"
+          {...pathProps}
         />
         <Path
           d="M2 12.2401C7.56 10.7301 13.42 10.6801 19 12.1101L19.5 12.2401"
@@ -36,6 +45,7 @@ export default function Paintbucket({
           strokeWidth="1.5"
           strokeLinecap="round"
           strokeLinejoin="round"
+          {...pathProps}
         />
       </G>
       <Defs>
