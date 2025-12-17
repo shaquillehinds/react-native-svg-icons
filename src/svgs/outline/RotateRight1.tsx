@@ -21,6 +21,23 @@ export default function RotateRight1({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,7 +46,7 @@ export default function RotateRight1({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M16.75 22H12.25C8.5 22 7 20.5 7 16.75V12.25C7 8.5 8.5 7 12.25 7H16.75C20.5 7 22 8.5 22 12.25V16.75C22 20.5 20.5 22 16.75 22Z"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -37,7 +54,7 @@ export default function RotateRight1({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M2 9C2 5.13 5.13 2 9 2L7.95 3.75"
         stroke={color || '#292D32'}
         strokeWidth="1.5"

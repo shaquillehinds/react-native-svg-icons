@@ -21,6 +21,23 @@ export default function Crown1({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,12 +46,12 @@ export default function Crown1({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M22.0003 5.70951V15.2895C22.0003 18.0495 19.7603 20.2895 17.0003 20.2895H7.00031C6.54031 20.2895 6.10031 20.2295 5.67031 20.1095C5.05031 19.9395 4.85031 19.1495 5.31031 18.6895L15.9403 8.05951C16.1603 7.83951 16.4903 7.78951 16.8003 7.84951C17.1203 7.90951 17.4703 7.81951 17.7203 7.57951L20.2903 4.99951C21.2303 4.05951 22.0003 4.36951 22.0003 5.70951Z"
         fill={color || '#292D32'}
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M14.64 7.35953L4.17 17.8295C3.69 18.3095 2.89 18.1895 2.57 17.5895C2.2 16.9095 2 16.1195 2 15.2895V5.70953C2 4.36953 2.77 4.05953 3.71 4.99953L6.29 7.58953C6.68 7.96953 7.32 7.96953 7.71 7.58953L11.29 3.99953C11.68 3.60953 12.32 3.60953 12.71 3.99953L14.65 5.93953C15.03 6.32953 15.03 6.96953 14.64 7.35953Z"
         fill={color || '#292D32'}
         {...pathProps}

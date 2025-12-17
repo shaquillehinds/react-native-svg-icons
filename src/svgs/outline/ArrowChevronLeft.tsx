@@ -21,6 +21,23 @@ export default function ArrowChevronLeft({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,7 +46,7 @@ export default function ArrowChevronLeft({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M15 19.9201L8.47997 13.4001C7.70997 12.6301 7.70997 11.3701 8.47997 10.6001L15 4.08008"
         stroke={color || '#292D32'}
         strokeWidth="1.5"

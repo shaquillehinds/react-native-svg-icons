@@ -21,6 +21,23 @@ export default function FolderCloud({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,7 +46,7 @@ export default function FolderCloud({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M9 22H7C3 22 2 21 2 17V7C2 3 3 2 7 2H8.5C10 2 10.33 2.44001 10.9 3.20001L12.4 5.20001C12.78 5.70001 13 6 14 6H17C21 6 22 7 22 11V13"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -38,7 +55,7 @@ export default function FolderCloud({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M13.7601 18.32C11.4101 18.49 11.4101 21.89 13.7601 22.06H19.3201C19.9901 22.06 20.6501 21.81 21.1401 21.36C22.7901 19.92 21.91 17.04 19.74 16.77C18.96 12.08 12.1801 13.86 13.7801 18.33"
         stroke={color || '#292D32'}
         strokeWidth="1.5"

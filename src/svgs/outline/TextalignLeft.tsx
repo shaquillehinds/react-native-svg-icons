@@ -21,6 +21,23 @@ export default function TextalignLeft({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,7 +46,7 @@ export default function TextalignLeft({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M3 4.5H21"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -37,7 +54,7 @@ export default function TextalignLeft({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M3 9.5H12.47"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -45,7 +62,7 @@ export default function TextalignLeft({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M3 14.5H21"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -53,7 +70,7 @@ export default function TextalignLeft({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M3 19.5H12.47"
         stroke={color || '#292D32'}
         strokeWidth="1.5"

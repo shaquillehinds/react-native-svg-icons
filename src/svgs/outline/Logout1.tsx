@@ -21,6 +21,23 @@ export default function Logout1({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,7 +46,7 @@ export default function Logout1({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M17.4399 14.62L19.9999 12.06L17.4399 9.5"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -38,7 +55,7 @@ export default function Logout1({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M9.76001 12.0601H19.93"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -47,7 +64,7 @@ export default function Logout1({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M11.76 20C7.34001 20 3.76001 17 3.76001 12C3.76001 7 7.34001 4 11.76 4"
         stroke={color || '#292D32'}
         strokeWidth="1.5"

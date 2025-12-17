@@ -21,6 +21,23 @@ export default function Text({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,7 +46,7 @@ export default function Text({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M2.66992 7.17003V5.35003C2.66992 4.20003 3.59992 3.28003 4.73992 3.28003H19.2599C20.4099 3.28003 21.3299 4.21003 21.3299 5.35003V7.17003"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -37,7 +54,7 @@ export default function Text({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M12 20.7201V4.11011"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -45,7 +62,7 @@ export default function Text({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M8.06006 20.72H15.9401"
         stroke={color || '#292D32'}
         strokeWidth="1.5"

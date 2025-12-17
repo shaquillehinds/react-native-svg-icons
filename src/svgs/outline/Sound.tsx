@@ -21,6 +21,23 @@ export default function Sound({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,7 +46,7 @@ export default function Sound({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M3 8.25V15.75"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -37,7 +54,7 @@ export default function Sound({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M7.5 5.75V18.25"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -45,7 +62,7 @@ export default function Sound({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M12 3.25V20.75"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -53,7 +70,7 @@ export default function Sound({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M16.5 5.75V18.25"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -61,7 +78,7 @@ export default function Sound({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M21 8.25V15.75"
         stroke={color || '#292D32'}
         strokeWidth="1.5"

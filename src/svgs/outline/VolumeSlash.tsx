@@ -21,6 +21,23 @@ export default function VolumeSlash({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,7 +46,7 @@ export default function VolumeSlash({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M15 8.37003V7.41003C15 4.43003 12.93 3.29003 10.41 4.87003L7.49 6.70003C7.17 6.89003 6.8 7.00003 6.43 7.00003H5C3 7.00003 2 8.00003 2 10V14C2 16 3 17 5 17H7"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -37,7 +54,7 @@ export default function VolumeSlash({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M10.41 19.13C12.93 20.71 15 19.56 15 16.59V12.95"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -45,7 +62,7 @@ export default function VolumeSlash({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M18.81 9.41992C19.71 11.5699 19.44 14.0799 18 15.9999"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -53,7 +70,7 @@ export default function VolumeSlash({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M21.15 7.80005C22.62 11.29 22.18 15.37 19.83 18.5"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -61,7 +78,7 @@ export default function VolumeSlash({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M22 2L2 22"
         stroke={color || '#292D32'}
         strokeWidth="1.5"

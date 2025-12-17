@@ -21,6 +21,23 @@ export default function ArrowSwap({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,7 +46,7 @@ export default function ArrowSwap({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M9.00999 20.5L3.98999 15.49"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -38,7 +55,7 @@ export default function ArrowSwap({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M9.01001 3.5V20.5"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -47,7 +64,7 @@ export default function ArrowSwap({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M14.99 3.5L20.01 8.51"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -56,7 +73,7 @@ export default function ArrowSwap({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M14.99 20.5V3.5"
         stroke={color || '#292D32'}
         strokeWidth="1.5"

@@ -21,6 +21,23 @@ export default function Pharagraphspacing({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,7 +46,7 @@ export default function Pharagraphspacing({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M3 22H21"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -37,7 +54,7 @@ export default function Pharagraphspacing({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M3 2H21"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -45,7 +62,7 @@ export default function Pharagraphspacing({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M12 6V18"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -53,7 +70,7 @@ export default function Pharagraphspacing({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M14.8299 7.71989L11.9999 4.88989L9.16992 7.71989"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -61,7 +78,7 @@ export default function Pharagraphspacing({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M14.8299 15.8899L11.9999 18.7199L9.16992 15.8899"
         stroke={color || '#292D32'}
         strokeWidth="1.5"

@@ -21,6 +21,23 @@ export default function Export3({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,7 +46,7 @@ export default function Export3({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -38,7 +55,7 @@ export default function Export3({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M13 11L21.2 2.80005"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -46,7 +63,7 @@ export default function Export3({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M21.9999 6.83V2H17.1699"
         stroke={color || '#292D32'}
         strokeWidth="1.5"

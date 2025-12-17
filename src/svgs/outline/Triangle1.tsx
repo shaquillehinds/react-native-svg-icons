@@ -21,6 +21,23 @@ export default function Triangle1({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,7 +46,7 @@ export default function Triangle1({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M10.8999 2L0.899902 12L10.8999 22V18L4.8999 12L10.8999 6V2Z"
         stroke={color || '#17191C'}
         strokeWidth="1.5"
@@ -38,7 +55,7 @@ export default function Triangle1({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M12.8999 2L22.8999 12L12.8999 22V18L18.8999 12L12.8999 6V2Z"
         stroke={color || '#17191C'}
         strokeWidth="1.5"
@@ -47,7 +64,7 @@ export default function Triangle1({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M10.8999 9L7.8999 12L10.8999 15V9Z"
         stroke={color || '#17191C'}
         strokeWidth="1.5"

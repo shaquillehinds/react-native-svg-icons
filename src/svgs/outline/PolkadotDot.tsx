@@ -21,6 +21,23 @@ export default function PolkadotDot({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,7 +46,7 @@ export default function PolkadotDot({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M5.4 13C4.8 12 4.5 10.8 4.5 9.5C4.5 5.4 7.9 2 12 2C16.1 2 19.5 5.4 19.5 9.5C19.5 13.6 16.1 17 12 17C12 17 9.3 17 8.3 19.2C8.1 19.7 8 20.3 8 21L10 7"
         stroke={color || '#17191C'}
         strokeWidth="1.5"
@@ -38,7 +55,7 @@ export default function PolkadotDot({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M14 21V21"
         stroke={color || '#17191C'}
         strokeWidth="2"

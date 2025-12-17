@@ -21,6 +21,23 @@ export default function CardRemove1({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,7 +46,7 @@ export default function CardRemove1({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M2 8.5H13.5"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -38,7 +55,7 @@ export default function CardRemove1({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M6 16.5H8"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -47,7 +64,7 @@ export default function CardRemove1({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M10.5 16.5H14.5"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -56,7 +73,7 @@ export default function CardRemove1({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M22 12.03V16.11C22 19.62 21.11 20.5 17.56 20.5H6.44C2.89 20.5 2 19.62 2 16.11V7.89C2 4.38 2.89 3.5 6.44 3.5H13.5"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -64,14 +81,14 @@ export default function CardRemove1({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M17.3086 8.18957L21.1886 4.30957"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
         strokeLinecap="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M21.1886 8.18957L17.3086 4.30957"
         stroke={color || '#292D32'}
         strokeWidth="1.5"

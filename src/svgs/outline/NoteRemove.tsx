@@ -21,6 +21,23 @@ export default function NoteRemove({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,7 +46,7 @@ export default function NoteRemove({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M7 14H12"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -38,7 +55,7 @@ export default function NoteRemove({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M7 5.95996L3.25 2.20996"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -47,7 +64,7 @@ export default function NoteRemove({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M6.96002 2.25L3.21002 6"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -56,7 +73,7 @@ export default function NoteRemove({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M7 10H15"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -65,7 +82,7 @@ export default function NoteRemove({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M10 2H16C19.33 2.18 21 3.41 21 7.99V16"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -74,7 +91,7 @@ export default function NoteRemove({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M3 9.01001V15.98C3 19.99 4 22 9 22H12C12.17 22 14.84 22 15 22"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -83,7 +100,7 @@ export default function NoteRemove({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M21 16L15 22V19C15 17 16 16 18 16H21Z"
         stroke={color || '#292D32'}
         strokeWidth="1.5"

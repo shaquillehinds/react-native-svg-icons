@@ -21,6 +21,23 @@ export default function WatchStatus({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,7 +46,7 @@ export default function WatchStatus({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M8.5 19H15.5C17.83 19 19 17.83 19 15.5V8.5C19 6.17 17.83 5 15.5 5H8.5C6.17 5 5 6.17 5 8.5V15.5C5 17.83 6.17 19 8.5 19Z"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -38,7 +55,7 @@ export default function WatchStatus({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M16 2H8"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -47,7 +64,7 @@ export default function WatchStatus({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M16 22H8"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -56,7 +73,7 @@ export default function WatchStatus({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M12 14V10"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -64,7 +81,7 @@ export default function WatchStatus({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M15 14V12"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -72,7 +89,7 @@ export default function WatchStatus({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M9 14V13"
         stroke={color || '#292D32'}
         strokeWidth="1.5"

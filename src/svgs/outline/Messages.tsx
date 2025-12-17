@@ -21,6 +21,23 @@ export default function Messages({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,7 +46,7 @@ export default function Messages({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M17 9C17 12.87 13.64 16 9.5 16L8.57001 17.12L8.02 17.78C7.55 18.34 6.65 18.22 6.34 17.55L5 14.6C3.18 13.32 2 11.29 2 9C2 5.13 5.36 2 9.5 2C12.52 2 15.13 3.67001 16.3 6.07001C16.75 6.96001 17 7.95 17 9Z"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -37,7 +54,7 @@ export default function Messages({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M22 12.86C22 15.15 20.82 17.1801 19 18.4601L17.66 21.41C17.35 22.08 16.45 22.2101 15.98 21.6401L14.5 19.86C12.08 19.86 9.92001 18.7901 8.57001 17.1201L9.5 16.0001C13.64 16.0001 17 12.8701 17 9.00006C17 7.95006 16.75 6.96007 16.3 6.07007C19.57 6.82007 22 9.58005 22 12.86Z"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -45,7 +62,7 @@ export default function Messages({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M7 9H12"
         stroke={color || '#292D32'}
         strokeWidth="1.5"

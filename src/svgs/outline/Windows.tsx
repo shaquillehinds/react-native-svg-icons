@@ -21,6 +21,23 @@ export default function Windows({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,7 +46,7 @@ export default function Windows({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         fillRule="evenodd"
         clipRule="evenodd"
         d="M22 2L12 4V11H22V2Z"
@@ -40,7 +57,7 @@ export default function Windows({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         fillRule="evenodd"
         clipRule="evenodd"
         d="M22 22L12 20V13H22V22Z"
@@ -51,7 +68,7 @@ export default function Windows({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         fillRule="evenodd"
         clipRule="evenodd"
         d="M10 4.30005L2 6.00005V11H10V4.30005Z"
@@ -62,7 +79,7 @@ export default function Windows({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         fillRule="evenodd"
         clipRule="evenodd"
         d="M10 19.7L2 18V13H10V19.7Z"

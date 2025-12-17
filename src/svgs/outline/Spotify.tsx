@@ -21,6 +21,23 @@ export default function Spotify({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,7 +46,7 @@ export default function Spotify({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
         stroke={color || '#17191C'}
         strokeWidth="1.5"
@@ -38,7 +55,7 @@ export default function Spotify({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M6.6001 9.3001C10.2001 7.9001 14.3001 8.4001 17.5001 10.6001"
         stroke={color || '#17191C'}
         strokeWidth="1.5"
@@ -47,7 +64,7 @@ export default function Spotify({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M7.8999 12.4C10.5999 11.4 13.5999 11.7 15.8999 13.4"
         stroke={color || '#17191C'}
         strokeWidth="1.5"
@@ -56,7 +73,7 @@ export default function Spotify({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M8.80005 15.4001C10.8 14.6001 13 14.9001 14.8 16.1001"
         stroke={color || '#17191C'}
         strokeWidth="1.5"

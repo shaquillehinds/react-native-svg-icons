@@ -21,6 +21,23 @@ export default function AugurRep({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,14 +46,14 @@ export default function AugurRep({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
         stroke={color || '#17191C'}
         strokeWidth="1.5"
         strokeMiterlimit="10"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M9 11L11.5 6H12.5L15 11"
         stroke={color || '#17191C'}
         strokeWidth="1.5"
@@ -45,7 +62,7 @@ export default function AugurRep({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M8 13L7 15L12 18L17 15L16 13"
         stroke={color || '#17191C'}
         strokeWidth="1.5"

@@ -21,6 +21,23 @@ export default function SliderHorizontal({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,17 +46,17 @@ export default function SliderHorizontal({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M9 22H15C16.66 22 18 20.66 18 19V5C18 3.34 16.66 2 15 2H9C7.34 2 6 3.34 6 5V19C6 20.66 7.34 22 9 22Z"
         fill={color || '#292D32'}
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M4.5 5.92923V18.0692C4.5 18.3892 4.21 18.6192 3.9 18.5592C2.42 18.2892 2 17.4292 2 15.3292V8.66923C2 6.56923 2.42 5.70923 3.9 5.43923C4.21 5.37923 4.5 5.60923 4.5 5.92923Z"
         fill={color || '#292D32'}
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M22 8.66923V15.3292C22 17.4292 21.58 18.2892 20.1 18.5592C19.79 18.6192 19.5 18.3792 19.5 18.0692V5.92923C19.5 5.60923 19.79 5.37923 20.1 5.43923C21.58 5.70923 22 6.56923 22 8.66923Z"
         fill={color || '#292D32'}
         {...pathProps}

@@ -21,6 +21,23 @@ export default function XrpXrp({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,12 +46,12 @@ export default function XrpXrp({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M5.46042 2H4.05039C3.12039 2 2.6504 3.13 3.3104 3.79L9.04038 9.52C10.6804 11.16 13.3304 11.16 14.9704 9.52L20.7004 3.79C21.3604 3.13 20.8904 2 19.9604 2H18.5504C17.7204 2 16.9204 2.33 16.3304 2.92L12.7504 6.5C12.3404 6.91 11.6804 6.91 11.2704 6.5L7.6904 2.92C7.0904 2.33 6.29042 2 5.46042 2Z"
         fill={color || 'black'}
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M5.46042 21.9687H4.05039C3.12039 21.9687 2.6504 20.8388 3.3104 20.1788L9.04038 14.4488C10.6804 12.8088 13.3304 12.8088 14.9704 14.4488L20.7004 20.1788C21.3604 20.8388 20.8904 21.9687 19.9604 21.9687H18.5504C17.7204 21.9687 16.9204 21.6387 16.3304 21.0487L12.7504 17.4687C12.3404 17.0587 11.6804 17.0587 11.2704 17.4687L7.6904 21.0487C7.0904 21.6387 6.29042 21.9687 5.46042 21.9687Z"
         fill={color || 'black'}
         {...pathProps}

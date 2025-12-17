@@ -21,6 +21,23 @@ export default function Twitch({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,7 +46,7 @@ export default function Twitch({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         fillRule="evenodd"
         clipRule="evenodd"
         d="M4.5 2H21.5V14L16.5 19H11.5L9.5 22H6.5V19H2.5V5L4.5 2Z"
@@ -40,7 +57,7 @@ export default function Twitch({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M11 7H9V13H11V7Z"
         stroke={color || '#17191C'}
         strokeWidth="1.5"
@@ -49,7 +66,7 @@ export default function Twitch({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M16 7H14V13H16V7Z"
         stroke={color || '#17191C'}
         strokeWidth="1.5"

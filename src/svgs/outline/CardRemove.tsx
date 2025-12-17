@@ -21,6 +21,23 @@ export default function CardRemove({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,7 +46,7 @@ export default function CardRemove({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M1.89844 10.0303H21.8984"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -38,7 +55,7 @@ export default function CardRemove({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M11.4584 20.53H6.34839C2.79839 20.53 1.89844 19.65 1.89844 16.14V7.92004C1.89844 4.74004 2.63841 3.72004 5.42841 3.56004C5.70841 3.55004 6.01839 3.54004 6.34839 3.54004H17.4584C21.0084 3.54004 21.9084 4.42004 21.9084 7.93004V12.34"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -46,7 +63,7 @@ export default function CardRemove({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M17.8984 22.0303C20.1076 22.0303 21.8984 20.2394 21.8984 18.0303C21.8984 15.8211 20.1076 14.0303 17.8984 14.0303C15.6893 14.0303 13.8984 15.8211 13.8984 18.0303C13.8984 20.2394 15.6893 22.0303 17.8984 22.0303Z"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -55,7 +72,7 @@ export default function CardRemove({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M18.9694 19.1503L16.8594 17.0303"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -64,7 +81,7 @@ export default function CardRemove({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M18.9481 17.0603L16.8281 19.1703"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -73,7 +90,7 @@ export default function CardRemove({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M5.89844 16.0303H9.89844"
         stroke={color || '#292D32'}
         strokeWidth="1.5"

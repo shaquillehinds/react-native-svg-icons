@@ -21,6 +21,23 @@ export default function Bluetooth({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,7 +46,7 @@ export default function Bluetooth({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M5.64014 18.64L17.9901 7.31998C18.5001 6.84998 18.4901 6.09997 17.9501 5.64997L14.1001 2.43998C13.1001 1.60998 12.2801 1.98998 12.2801 3.28998V20.71C12.2801 22.01 13.1001 22.39 14.1001 21.56L17.9501 18.35C18.4901 17.9 18.5001 17.15 17.9901 16.68L5.64014 5.35996"
         stroke={color || '#292D32'}
         strokeWidth="1.5"

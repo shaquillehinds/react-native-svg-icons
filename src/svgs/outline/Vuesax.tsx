@@ -21,6 +21,23 @@ export default function Vuesax({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,7 +46,7 @@ export default function Vuesax({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M21 8L12 22L2.95996 8"
         stroke={color || 'black'}
         strokeWidth="1.5"
@@ -38,7 +55,7 @@ export default function Vuesax({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M3 4H6L12 13L18 4H21L12 18L3 4Z"
         stroke={color || 'black'}
         strokeWidth="1.5"
@@ -47,7 +64,7 @@ export default function Vuesax({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M8 3L12 9L16 3L13.2 4V2H10.8V4L8 3Z"
         stroke={color || 'black'}
         strokeWidth="1.5"

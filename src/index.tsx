@@ -1,3 +1,4 @@
+import type { AnimateSVGPathComponentProps } from '@shaquillehinds/react-native-essentials';
 import { iconRegistry } from './svgs/registry';
 import type { IconNameByType } from './svgs/types';
 import type { PathProps, SvgProps } from 'react-native-svg';
@@ -29,7 +30,7 @@ export function SvgIcon<T extends SvgIconType>({
 }: SvgIconProps<T>) {
   const icons = iconRegistry[type];
   if (!icons) {
-    console.error($lf(30), `Icons not found: ${type}`);
+    console.error($lf(33), `Icons not found: ${type}`);
     return null;
   }
   const Icon = icons[name as keyof typeof icons] as
@@ -37,12 +38,18 @@ export function SvgIcon<T extends SvgIconType>({
     | undefined;
 
   if (!Icon) {
-    console.error($lf(38), `Icon not found: ${type}/${name}`);
+    console.error($lf(41), `Icon not found: ${type}/${name}`);
     return null;
   }
 
   return (
-    <Icon size={size} color={color} svgProps={svgProps} pathProps={pathProps} />
+    <Icon
+      size={size}
+      color={color}
+      svgProps={svgProps}
+      pathProps={pathProps}
+      animate={animate}
+    />
   );
 }
 

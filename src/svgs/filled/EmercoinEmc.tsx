@@ -21,6 +21,23 @@ export default function EmercoinEmc({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,7 +46,7 @@ export default function EmercoinEmc({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM17.25 16C17.25 16.41 16.91 16.75 16.5 16.75H7.5C7.09 16.75 6.75 16.41 6.75 16C6.75 15.59 7.09 15.25 7.5 15.25H15.75V8.75H13.25V12C13.25 12.41 12.91 12.75 12.5 12.75H7.5C7.09 12.75 6.75 12.41 6.75 12C6.75 11.59 7.09 11.25 7.5 11.25H11.75V8.75H7.5C7.09 8.75 6.75 8.41 6.75 8C6.75 7.59 7.09 7.25 7.5 7.25H16.5C16.91 7.25 17.25 7.59 17.25 8V16Z"
         fill={color || 'black'}
         {...pathProps}

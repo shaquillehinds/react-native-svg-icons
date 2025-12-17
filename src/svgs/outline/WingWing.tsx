@@ -21,6 +21,23 @@ export default function WingWing({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,7 +46,7 @@ export default function WingWing({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M16.0001 5H19.5001L22.2001 9.7L17.0001 19L15.1001 15.9L18.7001 9.7L16.0001 5Z"
         stroke={color || '#17191C'}
         strokeWidth="1.5"
@@ -38,7 +55,7 @@ export default function WingWing({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M9.0001 5H12.5001L15.2001 9.7L10.0001 19L8.1001 15.9L11.7001 9.7L9.0001 5Z"
         stroke={color || '#17191C'}
         strokeWidth="1.5"
@@ -47,7 +64,7 @@ export default function WingWing({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M1.80005 5H5.30005L8.00005 9.8L6.30005 12.7L1.80005 5Z"
         stroke={color || '#17191C'}
         strokeWidth="1.5"

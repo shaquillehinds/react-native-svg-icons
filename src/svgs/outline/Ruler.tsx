@@ -22,6 +22,23 @@ export default function Ruler({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -31,35 +48,35 @@ export default function Ruler({
       {...svgProps}
     >
       <G clipPath="url(#clip0_3125_33423)">
-        <Path
+        <PathComponent
           d="M5 17H19C21 17 22 16 22 14V10C22 8 21 7 19 7H5C3 7 2 8 2 10V14C2 16 3 17 5 17Z"
           stroke={color || '#292D32'}
           strokeWidth="1.5"
           strokeLinecap="round"
           {...pathProps}
         />
-        <Path
+        <PathComponent
           d="M18 7V12"
           stroke={color || '#292D32'}
           strokeWidth="1.5"
           strokeLinecap="round"
           {...pathProps}
         />
-        <Path
+        <PathComponent
           d="M6 7V11"
           stroke={color || '#292D32'}
           strokeWidth="1.5"
           strokeLinecap="round"
           {...pathProps}
         />
-        <Path
+        <PathComponent
           d="M10.05 7L10 12"
           stroke={color || '#292D32'}
           strokeWidth="1.5"
           strokeLinecap="round"
           {...pathProps}
         />
-        <Path
+        <PathComponent
           d="M14 7V10"
           stroke={color || '#292D32'}
           strokeWidth="1.5"

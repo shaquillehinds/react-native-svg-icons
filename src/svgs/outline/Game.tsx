@@ -21,6 +21,23 @@ export default function Game({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,7 +46,7 @@ export default function Game({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M9.57002 12.46L6.52002 15.51"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -38,7 +55,7 @@ export default function Game({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M6.55005 12.49L9.60005 15.54"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -47,7 +64,7 @@ export default function Game({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M13.53 14H13.54"
         stroke={color || '#292D32'}
         strokeWidth="2"
@@ -56,7 +73,7 @@ export default function Game({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M17.47 14H17.48"
         stroke={color || '#292D32'}
         strokeWidth="2"
@@ -65,7 +82,7 @@ export default function Game({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M15.5 15.98V15.96"
         stroke={color || '#292D32'}
         strokeWidth="2"
@@ -74,7 +91,7 @@ export default function Game({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M15.5 12.04V12.02"
         stroke={color || '#292D32'}
         strokeWidth="2"
@@ -83,7 +100,7 @@ export default function Game({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M9 22H15C20 22 22 20 22 15V13C22 8 20 6 15 6H9C4 6 2 8 2 13V15C2 20 4 22 9 22Z"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -91,7 +108,7 @@ export default function Game({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M13.01 2L13 3.01C12.99 3.56 12.55 4 12 4H11.97C11.42 4 10.98 4.45 10.98 5C10.98 5.55 11.43 6 11.98 6H12.98"
         stroke={color || '#292D32'}
         strokeWidth="1.5"

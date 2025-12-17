@@ -21,6 +21,23 @@ export default function Lamp({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,7 +46,7 @@ export default function Lamp({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M5.79011 14.69H18.2101C19.8701 14.69 20.8701 13.38 20.4401 11.78L18.2401 3.71C17.9801 2.77 16.9701 2 16.0101 2H7.99011C7.03011 2 6.02011 2.77 5.77011 3.7L3.57011 11.77C3.13011 13.38 4.13011 14.69 5.79011 14.69Z"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -37,7 +54,7 @@ export default function Lamp({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M12 15V22"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -45,7 +62,7 @@ export default function Lamp({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M8 22H16"
         stroke={color || '#292D32'}
         strokeWidth="1.5"

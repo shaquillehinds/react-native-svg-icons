@@ -21,6 +21,23 @@ export default function CeloCelo({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,12 +46,12 @@ export default function CeloCelo({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M9 22C12.866 22 16 18.866 16 15C16 11.134 12.866 8 9 8C5.13401 8 2 11.134 2 15C2 18.866 5.13401 22 9 22Z"
         fill={color || 'black'}
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M21.9998 9C21.9998 11.74 20.4299 14.11 18.1399 15.25C17.8299 15.41 17.4798 15.16 17.4498 14.82C17.1098 10.37 13.5998 6.89 9.17983 6.55C8.82983 6.52 8.58984 6.17 8.74984 5.86C9.88984 3.57 12.2598 2 14.9998 2C18.8698 2 21.9998 5.13 21.9998 9Z"
         fill={color || 'black'}
         {...pathProps}

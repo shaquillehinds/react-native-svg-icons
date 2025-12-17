@@ -21,6 +21,23 @@ export default function Google({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,7 +46,7 @@ export default function Google({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M15.1999 3H8.7999L1.3999 15.7L4.5999 21H19.3999C19.3999 21 22.5999 15.5 22.5999 15.6C22.5999 15.7 15.1999 3 15.1999 3Z"
         stroke={color || '#17191C'}
         strokeWidth="1.5"
@@ -38,7 +55,7 @@ export default function Google({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M8.7998 3L19.3998 21"
         stroke={color || '#17191C'}
         strokeWidth="1.5"
@@ -47,7 +64,7 @@ export default function Google({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M15.2001 3L4.6001 21"
         stroke={color || '#17191C'}
         strokeWidth="1.5"
@@ -56,7 +73,7 @@ export default function Google({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M1.5 15.7H22"
         stroke={color || '#17191C'}
         strokeWidth="1.5"

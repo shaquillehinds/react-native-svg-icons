@@ -21,6 +21,23 @@ export default function NexoNexo({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,7 +46,7 @@ export default function NexoNexo({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M12 6L17 3L22 6V18L17 21L7 15V9L17 15V9L12 6Z"
         stroke={color || 'black'}
         strokeWidth="1.5"
@@ -38,7 +55,7 @@ export default function NexoNexo({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M12 6L7 3L2 6V18L7 21L11.7 17.87"
         stroke={color || 'black'}
         strokeWidth="1.5"

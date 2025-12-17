@@ -21,6 +21,23 @@ export default function PolyswarmNct({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,7 +46,7 @@ export default function PolyswarmNct({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M9.5 3.19995H14.5C18.3 3.19995 21.5 6.29995 21.5 10.2C21.5 14 18.4 17.2 14.5 17.2H3.5"
         stroke={color || '#17191C'}
         strokeWidth="1.5"
@@ -38,7 +55,7 @@ export default function PolyswarmNct({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M3.2002 6.80005H13.8002C15.8002 6.80005 17.5002 8.50005 17.5002 10.5C17.5002 12.5 15.8002 14.2 13.8002 14.2H8.0002"
         stroke={color || '#17191C'}
         strokeWidth="1.5"
@@ -47,7 +64,7 @@ export default function PolyswarmNct({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M8.5 10.8H5.5"
         stroke={color || '#17191C'}
         strokeWidth="1.5"
@@ -56,7 +73,7 @@ export default function PolyswarmNct({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M6.5 20.8H2.5"
         stroke={color || '#17191C'}
         strokeWidth="1.5"

@@ -21,6 +21,23 @@ export default function LocationCross({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,13 +46,13 @@ export default function LocationCross({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M3.61995 8.49C5.58995 0.169998 18.42 0.159997 20.38 8.5C21.53 13.58 18.37 17.88 15.6 20.54C13.59 22.48 10.41 22.48 8.38995 20.54C5.62995 17.88 2.46995 13.57 3.61995 8.49Z"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M14 12.96L10.04 9"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
@@ -44,7 +61,7 @@ export default function LocationCross({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M13.96 9.04004L10 13"
         stroke={color || '#292D32'}
         strokeWidth="1.5"

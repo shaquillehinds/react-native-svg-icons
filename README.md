@@ -2,6 +2,10 @@
 
 A comprehensive, type-safe SVG icon library for React Native with 997+ icons in both filled and outline variants.
 
+<p align="center">
+<img src="https://raw.githubusercontent.com/shaquillehinds/react-native-svg-icons/master/assets/svgicons.gif" alt="example" height="500"/>
+</p>
+
 ## Features
 
 - 🎨 **997+ Icons** - Extensive collection covering UI elements, social media, crypto, arrows, shapes, and more

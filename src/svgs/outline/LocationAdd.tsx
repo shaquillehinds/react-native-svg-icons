@@ -21,6 +21,23 @@ export default function LocationAdd({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,21 +46,21 @@ export default function LocationAdd({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M9.25 11H14.75"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
         strokeLinecap="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M12 13.75V8.25"
         stroke={color || '#292D32'}
         strokeWidth="1.5"
         strokeLinecap="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M3.62001 8.49C5.59001 0.169998 18.42 0.159997 20.38 8.5C21.53 13.58 18.37 17.88 15.6 20.54C13.59 22.48 10.41 22.48 8.39001 20.54C5.63001 17.88 2.47001 13.57 3.62001 8.49Z"
         stroke={color || '#292D32'}
         strokeWidth="1.5"

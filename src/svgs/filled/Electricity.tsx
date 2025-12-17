@@ -21,6 +21,23 @@ export default function Electricity({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,7 +46,7 @@ export default function Electricity({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M15.59 5H15.25V2C15.25 1.59 14.91 1.25 14.5 1.25C14.09 1.25 13.75 1.59 13.75 2V5H10.25V2C10.25 1.59 9.91 1.25 9.5 1.25C9.09 1.25 8.75 1.59 8.75 2V5H8.41C7.36 5 6.5 5.86 6.5 6.91V12C6.5 14.2 8 16 10.5 16H11.25V22C11.25 22.41 11.59 22.75 12 22.75C12.41 22.75 12.75 22.41 12.75 22V16H13.5C16 16 17.5 14.2 17.5 12V6.91C17.5 5.86 16.64 5 15.59 5Z"
         fill={color || '#292D32'}
         {...pathProps}

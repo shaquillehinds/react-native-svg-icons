@@ -21,6 +21,23 @@ export default function UsdCoinUsdc({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,7 +46,7 @@ export default function UsdCoinUsdc({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M16.8999 16.9C19.5999 14.2 19.5999 9.7 16.8999 7"
         stroke={color || '#17191C'}
         strokeWidth="1.5"
@@ -38,7 +55,7 @@ export default function UsdCoinUsdc({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M7.1002 7.1001C4.4002 9.8001 4.4002 14.3001 7.1002 17.0001"
         stroke={color || '#17191C'}
         strokeWidth="1.5"
@@ -47,7 +64,7 @@ export default function UsdCoinUsdc({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M9.7002 13.6C9.7002 14.5 10.4002 15.2 11.3002 15.2H13.0002C13.7002 15.2 14.4002 14.6 14.4002 13.8C14.4002 12.9 14.0002 12.6 13.5002 12.4L10.7002 11.4C10.0002 11.3 9.7002 11 9.7002 10.2C9.7002 9.40005 10.3002 8.80005 11.1002 8.80005H12.9002C13.8002 8.80005 14.5002 9.50005 14.5002 10.4"
         stroke={color || '#17191C'}
         strokeWidth="1.5"
@@ -55,7 +72,7 @@ export default function UsdCoinUsdc({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M12 7.80005V16.2"
         stroke={color || '#17191C'}
         strokeWidth="1.5"
@@ -63,7 +80,7 @@ export default function UsdCoinUsdc({
         strokeLinejoin="round"
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
         stroke={color || '#17191C'}
         strokeWidth="1.5"

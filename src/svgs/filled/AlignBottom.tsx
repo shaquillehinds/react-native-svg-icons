@@ -21,6 +21,23 @@ export default function AlignBottom({
   pathProps?: PathProps;
   animate?: AnimateSVGPathComponentProps;
 }) {
+  const PathComponent = useCallback(
+    (props: PathProps) => {
+      if (!animate) return <Path {...props} />;
+      if (animate.mode === 'AnimatedPathProps')
+        return <AnimateSVGPathValuesComponent pathProps={props} {...animate} />;
+      return (
+        <AnimateSVGPathValueComponent
+          {...animate}
+          pathProps={(value, options) => ({
+            ...props,
+            ...animate.pathProps(value, options),
+          })}
+        />
+      );
+    },
+    [animate, pathProps]
+  );
   return (
     <Svg
       width={normalize(size || 24)}
@@ -29,17 +46,17 @@ export default function AlignBottom({
       fill="none"
       {...svgProps}
     >
-      <Path
+      <PathComponent
         d="M8.02 4.62109H6.98C5.39 4.62109 4.75 5.22109 4.75 6.74109V18.6211H10.25V6.74109C10.24 5.22109 9.6 4.62109 8.02 4.62109Z"
         fill={color || '#292D32'}
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M16.52 9.62109H15.48C13.89 9.62109 13.25 10.2311 13.25 11.7411V18.6211H18.75V11.7411C18.75 10.2311 18.1 9.62109 16.52 9.62109Z"
         fill={color || '#292D32'}
         {...pathProps}
       />
-      <Path
+      <PathComponent
         d="M2.75 17.8789H21.25C21.66 17.8789 22 18.2189 22 18.6289C22 19.0389 21.66 19.3789 21.25 19.3789H2.75C2.34 19.3789 2 19.0389 2 18.6189C2 18.1989 2.34 17.8789 2.75 17.8789Z"
         fill={color || '#292D32'}
         {...pathProps}
