@@ -1,4 +1,4 @@
-#
+# react-native-svg-icons
 
 A comprehensive, type-safe SVG icon library for React Native with 997+ icons in both filled and outline variants.
 
@@ -13,21 +13,22 @@ A comprehensive, type-safe SVG icon library for React Native with 997+ icons in 
 - 🎭 **Dual Variants** - Every icon available in both `filled` and `outline` styles
 - ⚡ **Performance Optimized** - Tree-shakeable with efficient SVG rendering via `react-native-svg`
 - 🎨 **Highly Customizable** - Control size, color, and pass custom SVG/Path props
+- ✨ **Built-in Animations** - Powerful animation support with two modes: interpolation-based and property-based animations
 - 🔧 **Zero Configuration** - Works out of the box with sensible defaults
 
 ## Installation
 
 ```bash
-npm install @shaquillehinds/react-native-svg-icons react-native-svg
+npm install react-native-svg-icons react-native-svg @shaquillehinds/react-native-essentials
 ```
 
 or
 
 ```bash
-yarn add @shaquillehinds/react-native-svg-icons react-native-svg
+yarn add react-native-svg-icons react-native-svg @shaquillehinds/react-native-essentials
 ```
 
-**Note:** This package requires `react-native-svg` as a peer dependency.
+**Note:** This package requires `react-native-svg` and `@shaquillehinds/react-native-essentials` as peer dependencies.
 
 ### iOS Setup
 
@@ -42,7 +43,7 @@ cd ios && pod install
 ### Basic Usage
 
 ```tsx
-import { SvgIcon } from '@shaquillehinds/react-native-svg-icons';
+import { SvgIcon } from 'react-native-svg-icons';
 
 function MyComponent() {
   return <SvgIcon type="filled" name="Heart" size={24} color="#FF0000" />;
@@ -101,6 +102,7 @@ The main component for rendering icons.
 | `color`     | `string`                            | `'#000000'` | The color of the icon                            |
 | `svgProps`  | `SvgProps`                          | `undefined` | Additional props to pass to the SVG component    |
 | `pathProps` | `PathProps`                         | `undefined` | Additional props to pass to the Path component   |
+| `animate`   | `AnimateSVGPathComponentProps`      | `undefined` | Animation configuration (see Animation section)  |
 
 ### Type Exports
 
@@ -111,7 +113,7 @@ import type {
   IconName, // Union of both filled and outline names
   SvgIconType, // 'filled' | 'outline'
   SvgIconProps, // Component props type
-} from '@shaquillehinds/react-native-svg-icons';
+} from 'react-native-svg-icons';
 ```
 
 ## Available Icons
@@ -228,13 +230,346 @@ function IconWrapper<T extends SvgIconType>(props: SvgIconProps<T>) {
 }
 ```
 
+## Animation
+
+The `animate` prop provides powerful, built-in animation capabilities for your icons. There are two animation modes available:
+
+### Animation Modes
+
+#### 1. InterpolatePathProps Mode
+
+This mode gives you fine-grained control by providing an `Animated.Value` that you can interpolate to create complex animations. Perfect for custom animations where you need full control over the interpolation.
+
+**Key Features:**
+
+- Direct access to the animated value for interpolation
+- Support for multiple animation stages
+- Full control over timing, spring animations, and easing
+
+**Props:**
+
+- `mode`: `"InterpolatePathProps"`
+- `animationConfig`: Single or array of animation configs (timing/spring)
+- `pathProps`: Function that receives the animated value and returns path properties
+- `autoStart`: Auto-start animation on mount (default: false)
+- `returnToStart`: Return to initial state after animation (default: false)
+- `loop`: Number of times to loop (-1 for infinite, default: 0)
+
+**Example - Color and Stroke Animation:**
+
+```tsx
+<SvgIcon
+  name="FingerScan"
+  type="outline"
+  size={100}
+  animate={{
+    mode: 'InterpolatePathProps',
+    autoStart: true,
+    loop: -1,
+    returnToStart: true,
+    pathProps: (value, { inputRange }) => ({
+      strokeLinejoin: 'miter',
+      stroke: value.interpolate({
+        inputRange,
+        outputRange: ['red', 'green'],
+      }),
+      strokeDashoffset: value.interpolate({
+        inputRange,
+        outputRange: [36, 0],
+      }),
+      strokeDasharray: '35, 35',
+    }),
+    animationConfig: [
+      {
+        type: 'timing',
+        duration: 1000,
+        useNativeDriver: true,
+      },
+    ],
+  }}
+/>
+```
+
+**Example - Multi-stage Animation:**
+
+```tsx
+<SvgIcon
+  name="Heart"
+  type="filled"
+  size={80}
+  animate={{
+    mode: 'InterpolatePathProps',
+    autoStart: true,
+    loop: -1,
+    pathProps: (value, { inputRange }) => ({
+      fill: value.interpolate({
+        inputRange,
+        outputRange: ['#FF0000', '#FF69B4', '#FF1493', '#FF0000'],
+      }),
+      opacity: value.interpolate({
+        inputRange,
+        outputRange: [0.5, 1, 0.8, 0.5],
+      }),
+    }),
+    animationConfig: [
+      { type: 'timing', duration: 500, useNativeDriver: false },
+      { type: 'timing', duration: 500, useNativeDriver: false },
+      { type: 'timing', duration: 500, useNativeDriver: false },
+    ],
+  }}
+/>
+```
+
+#### 2. AnimatedPathProps Mode
+
+This mode provides a simpler, declarative API where you specify which properties to animate and their values. The library handles the interpolation for you.
+
+**Key Features:**
+
+- Declarative API - just specify from/to values
+- Animate multiple properties simultaneously or in sequence
+- Support for numeric and string values (colors, dash arrays, etc.)
+
+**Props:**
+
+- `mode`: `"AnimatedPathProps"`
+- `config`: Animation configuration (timing/spring)
+- `animatedPathProps`: Array of properties to animate
+- `isSequence`: Animate properties in sequence vs parallel (default: false)
+- `autoStart`: Auto-start animation on mount (default: false)
+- `returnToStart`: Return to initial state after animation (default: false)
+- `loop`: Number of times to loop (-1 for infinite, default: 0)
+
+**Example - Parallel Animation:**
+
+```tsx
+<SvgIcon
+  name="Scanning"
+  type="outline"
+  size={100}
+  animate={{
+    mode: 'AnimatedPathProps',
+    autoStart: true,
+    loop: -1,
+    returnToStart: true,
+    config: {
+      type: 'timing',
+      duration: 2000,
+      useNativeDriver: false,
+    },
+    animatedPathProps: [
+      {
+        name: 'stroke',
+        from: 'red',
+        to: ['green', 'blue'],
+      },
+      {
+        name: 'strokeDasharray',
+        from: '18, 18',
+        to: ['36, 36', '18, 18'],
+      },
+      {
+        name: 'strokeDashoffset',
+        from: 72,
+        to: [18, 36],
+      },
+    ],
+  }}
+/>
+```
+
+**Example - Sequential Animation:**
+
+```tsx
+<SvgIcon
+  name="Star"
+  type="filled"
+  size={60}
+  animate={{
+    mode: 'AnimatedPathProps',
+    isSequence: true,
+    autoStart: true,
+    loop: -1,
+    config: {
+      type: 'spring',
+      tension: 40,
+      friction: 7,
+      useNativeDriver: false,
+    },
+    animatedPathProps: [
+      {
+        name: 'fill',
+        from: '#FFD700',
+        to: ['#FFA500', '#FFD700'],
+      },
+      {
+        name: 'opacity',
+        from: 1,
+        to: [0.5, 1],
+      },
+    ],
+  }}
+/>
+```
+
+### Animation Configuration Types
+
+Both modes support two types of animation configs:
+
+#### Timing Animation
+
+```tsx
+{
+  type: "timing",
+  duration: 1000,
+  delay?: 0,
+  easing?: Easing.linear,
+  useNativeDriver: true, // or false for color/transform animations
+}
+```
+
+#### Spring Animation
+
+```tsx
+{
+  type: "spring",
+  tension?: 40,
+  friction?: 7,
+  speed?: 12,
+  bounciness?: 8,
+  useNativeDriver: true, // or false for color/transform animations
+}
+```
+
+### Controlling Animations with Refs
+
+You can control animations programmatically using refs:
+
+```tsx
+import { useRef } from 'react';
+import type { AnimateSVGComponentValueRef } from '@shaquillehinds/react-native-essentials';
+
+function ControlledIcon() {
+  const animationRef = useRef<AnimateSVGComponentValueRef>(null);
+
+  const handleStart = () => animationRef.current?.start();
+  const handleStop = () => animationRef.current?.stop();
+  const handleReset = () => animationRef.current?.reset();
+  const handleReverse = () => animationRef.current?.reverse();
+
+  return (
+    <>
+      <SvgIcon
+        name="Play"
+        type="filled"
+        size={60}
+        animate={{
+          ref: animationRef,
+          mode: 'InterpolatePathProps',
+          autoStart: false,
+          pathProps: (value) => ({
+            fill: value.interpolate({
+              inputRange: [0, 1],
+              outputRange: ['#00FF00', '#FF0000'],
+            }),
+          }),
+          animationConfig: {
+            type: 'timing',
+            duration: 1000,
+            useNativeDriver: false,
+          },
+        }}
+      />
+      <Button title="Start" onPress={handleStart} />
+      <Button title="Stop" onPress={handleStop} />
+      <Button title="Reset" onPress={handleReset} />
+      <Button title="Reverse" onPress={handleReverse} />
+    </>
+  );
+}
+```
+
+### Common Animation Patterns
+
+#### Pulsing Effect
+
+```tsx
+<SvgIcon
+  name="Notification"
+  type="filled"
+  size={40}
+  animate={{
+    mode: 'AnimatedPathProps',
+    autoStart: true,
+    loop: -1,
+    returnToStart: true,
+    config: { type: 'timing', duration: 1000, useNativeDriver: false },
+    animatedPathProps: [{ name: 'opacity', from: 1, to: [0.3, 1] }],
+  }}
+/>
+```
+
+#### Rotating Stroke Dash
+
+```tsx
+<SvgIcon
+  name="Loading"
+  type="outline"
+  size={50}
+  animate={{
+    mode: 'AnimatedPathProps',
+    autoStart: true,
+    loop: -1,
+    config: { type: 'timing', duration: 1500, useNativeDriver: false },
+    animatedPathProps: [
+      {
+        name: 'strokeDashoffset',
+        from: 0,
+        to: [100],
+      },
+    ],
+  }}
+/>
+```
+
+#### Color Wave
+
+```tsx
+<SvgIcon
+  name="Wave"
+  type="outline"
+  size={80}
+  animate={{
+    mode: 'InterpolatePathProps',
+    autoStart: true,
+    loop: -1,
+    pathProps: (value) => ({
+      stroke: value.interpolate({
+        inputRange: [0, 0.33, 0.66, 1],
+        outputRange: ['#FF0000', '#00FF00', '#0000FF', '#FF0000'],
+      }),
+    }),
+    animationConfig: [
+      { type: 'timing', duration: 3000, useNativeDriver: false },
+    ],
+  }}
+/>
+```
+
+### Performance Notes
+
+- Set `useNativeDriver: true` when animating transform properties for better performance
+- Set `useNativeDriver: false` when animating colors, stroke properties, or opacity
+- For complex animations, consider using `InterpolatePathProps` mode for better control
+- Use `AnimatedPathProps` mode for simpler, declarative animations
+
 ## Examples
 
 ### Creating an Icon Button
 
 ```tsx
 import { TouchableOpacity } from 'react-native';
-import { SvgIcon } from '@shaquillehinds/react-native-svg-icons';
+import { SvgIcon } from 'react-native-svg-icons';
 
 function IconButton({ onPress }: { onPress: () => void }) {
   return (
@@ -248,7 +583,7 @@ function IconButton({ onPress }: { onPress: () => void }) {
 ### Tab Bar Icons
 
 ```tsx
-import { SvgIcon } from '@shaquillehinds/react-native-svg-icons';
+import { SvgIcon } from 'react-native-svg-icons';
 
 function TabBarIcon({
   focused,
@@ -272,8 +607,8 @@ function TabBarIcon({
 
 ```tsx
 import { View } from 'react-native';
-import { SvgIcon } from '@shaquillehinds/react-native-svg-icons';
-import type { FilledIconName } from '@shaquillehinds/react-native-svg-icons';
+import { SvgIcon } from 'react-native-svg-icons';
+import type { FilledIconName } from 'react-native-svg-icons';
 
 function IconGrid() {
   const icons: FilledIconName[] = ['Heart', 'Star', 'User', 'Setting', 'Home'];
@@ -290,35 +625,7 @@ function IconGrid() {
 
 ### Animated Icons
 
-```tsx
-import { Animated } from 'react-native';
-import { SvgIcon } from '@shaquillehinds/react-native-svg-icons';
-
-function AnimatedIcon() {
-  const scaleAnim = useRef(new Animated.Value(1)).current;
-
-  const handlePress = () => {
-    Animated.sequence([
-      Animated.timing(scaleAnim, {
-        toValue: 1.2,
-        duration: 150,
-        useNativeDriver: true,
-      }),
-      Animated.timing(scaleAnim, {
-        toValue: 1,
-        duration: 150,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  };
-
-  return (
-    <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
-      <SvgIcon type="filled" name="Heart" size={32} color="#FF0000" />
-    </Animated.View>
-  );
-}
-```
+See the [Animation](#animation) section for comprehensive examples of animating icons with the built-in `animate` prop.
 
 ## Performance Tips
 
@@ -329,7 +636,7 @@ function AnimatedIcon() {
 
 ```tsx
 import { memo } from 'react';
-import { SvgIcon } from '@shaquillehinds/react-native-svg-icons';
+import { SvgIcon } from 'react-native-svg-icons';
 
 const MemoizedIcon = memo(SvgIcon);
 
@@ -372,7 +679,7 @@ MIT
 
 ## Credits
 
-Icons curated and optimized for React Native. Built with TypeScript, VueSax and `react-native-svg`.
+Icons curated and optimized for React Native. Built with TypeScript and `react-native-svg`.
 
 ---
 
