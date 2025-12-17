@@ -1,5 +1,11 @@
 import Svg, { Path } from 'react-native-svg';
-import { normalize } from '@shaquillehinds/react-native-essentials';
+import {
+  normalize,
+  type AnimateSVGPathComponentProps,
+  AnimateSVGPathValueComponent,
+  AnimateSVGPathValuesComponent,
+} from '@shaquillehinds/react-native-essentials';
+import { useCallback } from 'react';
 import type { PathProps, SvgProps } from 'react-native-svg';
 
 export default function Layer({
@@ -7,11 +13,13 @@ export default function Layer({
   color,
   svgProps,
   pathProps,
+  animate,
 }: {
   size?: number;
   color?: string;
   svgProps?: SvgProps;
   pathProps?: PathProps;
+  animate?: AnimateSVGPathComponentProps;
 }) {
   return (
     <Svg

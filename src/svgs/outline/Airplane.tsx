@@ -1,5 +1,4 @@
 import Svg, { Path } from 'react-native-svg';
-import { useCallback } from 'react';
 import type { PathProps, SvgProps } from 'react-native-svg';
 import {
   normalize,
@@ -7,6 +6,7 @@ import {
   AnimateSVGPathValueComponent,
   AnimateSVGPathValuesComponent,
 } from '@shaquillehinds/react-native-essentials';
+import { useCallback } from 'react';
 
 export default function Airplane({
   size,

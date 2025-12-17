@@ -9,6 +9,7 @@ export type SvgIcon = {
   color?: string;
   svgProps?: SvgProps;
   pathProps?: PathProps;
+  animate?: AnimateSVGPathComponentProps;
 };
 
 // Type-safe props - icon name is validated based on type
@@ -24,6 +25,7 @@ export function SvgIcon<T extends SvgIconType>({
   color,
   svgProps,
   pathProps,
+  animate,
 }: SvgIconProps<T>) {
   const icons = iconRegistry[type];
   if (!icons) {
