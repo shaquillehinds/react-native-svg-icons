@@ -19,13 +19,13 @@ A comprehensive, type-safe SVG icon library for React Native with 997+ icons in 
 ## Installation
 
 ```bash
-npm install react-native-svg-icons react-native-svg @shaquillehinds/react-native-essentials
+npm install @shaquillehinds/react-native-svg-icons react-native-svg @shaquillehinds/react-native-essentials
 ```
 
 or
 
 ```bash
-yarn add react-native-svg-icons react-native-svg @shaquillehinds/react-native-essentials
+yarn add @shaquillehinds/react-native-svg-icons react-native-svg @shaquillehinds/react-native-essentials
 ```
 
 **Note:** This package requires `react-native-svg` and `@shaquillehinds/react-native-essentials` as peer dependencies.
@@ -43,7 +43,7 @@ cd ios && pod install
 ### Basic Usage
 
 ```tsx
-import { SvgIcon } from 'react-native-svg-icons';
+import { SvgIcon } from '@shaquillehinds/react-native-svg-icons';
 
 function MyComponent() {
   return <SvgIcon type="filled" name="Heart" size={24} color="#FF0000" />;
@@ -113,7 +113,7 @@ import type {
   IconName, // Union of both filled and outline names
   SvgIconType, // 'filled' | 'outline'
   SvgIconProps, // Component props type
-} from 'react-native-svg-icons';
+} from '@shaquillehinds/react-native-svg-icons';
 ```
 
 ## Available Icons
@@ -569,7 +569,7 @@ function ControlledIcon() {
 
 ```tsx
 import { TouchableOpacity } from 'react-native';
-import { SvgIcon } from 'react-native-svg-icons';
+import { SvgIcon } from '@shaquillehinds/react-native-svg-icons';
 
 function IconButton({ onPress }: { onPress: () => void }) {
   return (
@@ -583,7 +583,7 @@ function IconButton({ onPress }: { onPress: () => void }) {
 ### Tab Bar Icons
 
 ```tsx
-import { SvgIcon } from 'react-native-svg-icons';
+import { SvgIcon } from '@shaquillehinds/react-native-svg-icons';
 
 function TabBarIcon({
   focused,
@@ -607,8 +607,8 @@ function TabBarIcon({
 
 ```tsx
 import { View } from 'react-native';
-import { SvgIcon } from 'react-native-svg-icons';
-import type { FilledIconName } from 'react-native-svg-icons';
+import { SvgIcon } from '@shaquillehinds/react-native-svg-icons';
+import type { FilledIconName } from '@shaquillehinds/react-native-svg-icons';
 
 function IconGrid() {
   const icons: FilledIconName[] = ['Heart', 'Star', 'User', 'Setting', 'Home'];
@@ -636,7 +636,7 @@ See the [Animation](#animation) section for comprehensive examples of animating 
 
 ```tsx
 import { memo } from 'react';
-import { SvgIcon } from 'react-native-svg-icons';
+import { SvgIcon } from '@shaquillehinds/react-native-svg-icons';
 
 const MemoizedIcon = memo(SvgIcon);
 
