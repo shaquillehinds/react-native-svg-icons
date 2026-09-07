@@ -1,20 +1,26 @@
-# react-native-svg-icons
+# @shaquillehinds/react-native-svg-icons
 
-A comprehensive, type-safe SVG icon library for React Native with 997+ icons in both filled and outline variants.
+A type-safe SVG icon set for React Native. 997 icons in each of two variants —
+`filled` and `outline` — with icon names validated at compile time and built-in
+path animation.
 
-<p align="center">
-<img src="https://raw.githubusercontent.com/shaquillehinds/react-native-svg-icons/master/assets/svgicons.gif" alt="example" height="500"/>
-</p>
+---
 
-## Features
+## Contents
 
-- 🎨 **997+ Icons** - Extensive collection covering UI elements, social media, crypto, arrows, shapes, and more
-- 🔒 **Fully Type-Safe** - TypeScript-first with auto-generated types ensuring icon names are validated at compile time
-- 🎭 **Dual Variants** - Every icon available in both `filled` and `outline` styles
-- ⚡ **Performance Optimized** - Tree-shakeable with efficient SVG rendering via `react-native-svg`
-- 🎨 **Highly Customizable** - Control size, color, and pass custom SVG/Path props
-- ✨ **Built-in Animations** - Powerful animation support with two modes: interpolation-based and property-based animations
-- 🔧 **Zero Configuration** - Works out of the box with sensible defaults
+- [Installation](#installation)
+- [Quick start](#quick-start)
+- [Finding icon names](#finding-icon-names)
+- [Props](#props)
+- [Filled vs outline](#filled-vs-outline)
+- [TypeScript](#typescript)
+- [Animation](#animation)
+- [Bundle size](#bundle-size)
+- [Recipes](#recipes)
+- [Troubleshooting](#troubleshooting)
+- [AI agent rules](#ai-agent-rules)
+
+---
 
 ## Installation
 
@@ -22,245 +28,255 @@ A comprehensive, type-safe SVG icon library for React Native with 997+ icons in 
 npm install @shaquillehinds/react-native-svg-icons react-native-svg @shaquillehinds/react-native-essentials
 ```
 
-or
+`react-native-svg` and `@shaquillehinds/react-native-essentials` are peer
+dependencies.
 
-```bash
-yarn add @shaquillehinds/react-native-svg-icons react-native-svg @shaquillehinds/react-native-essentials
-```
-
-**Note:** This package requires `react-native-svg` and `@shaquillehinds/react-native-essentials` as peer dependencies.
-
-### iOS Setup
-
-For iOS, you'll need to install pods:
+iOS:
 
 ```bash
 cd ios && pod install
 ```
 
-## Usage
+---
 
-### Basic Usage
+## Quick start
 
 ```tsx
 import { SvgIcon } from '@shaquillehinds/react-native-svg-icons';
 
 function MyComponent() {
-  return <SvgIcon type="filled" name="Heart" size={24} color="#FF0000" />;
+  return (
+    <>
+      <SvgIcon type="filled" name="Heart" size={24} color="#FF0000" />
+      <SvgIcon type="outline" name="SearchNormal" size={20} color="#8E8E93" />
+    </>
+  );
 }
 ```
 
-### With Outline Variant
+`type` and `name` are required. `type` also selects which name union `name` is
+checked against, so an outline-only name on `type="filled"` is a compile error.
 
-```tsx
-<SvgIcon type="outline" name="Heart" size={24} color="#000000" />
+---
+
+## Finding icon names
+
+Names are irregular. Some concepts have no obvious name (`Search` does not exist;
+`SearchNormal` does), some families carry misspellings that are part of the real
+name, and a handful of names start with a lowercase letter or a digit. Look names
+up rather than guessing.
+
+### CLI
+
+```sh
+npx rnsi-icons search                  # fuzzy match across both variants
+npx rnsi-icons arrow --type outline    # restrict to one variant
+npx rnsi-icons Trash --exact           # confirm a single name
+npx rnsi-icons --diff                  # names missing from one variant
+npx rnsi-icons --list --shared         # every name present in both
+npx rnsi-icons search --json           # machine-readable
 ```
 
-### Custom SVG Props
+`--limit N` caps output (default 40; `--limit 0` for everything).
 
-```tsx
-<SvgIcon
-  type="filled"
-  name="Star"
-  size={32}
-  color="#FFD700"
-  svgProps={{
-    opacity: 0.8,
-    style: { marginRight: 8 },
-  }}
-/>
-```
+### Editor
 
-### Custom Path Props
+`name` is a string-literal union, so autocomplete lists valid names inline and
+TypeScript rejects anything else. Do not silence that with a cast.
 
-```tsx
-<SvgIcon
-  type="outline"
-  name="User"
-  size={28}
-  color="#333"
-  pathProps={{
-    strokeWidth: 2,
-    strokeLinecap: 'round',
-  }}
-/>
-```
+### Names people expect that do not exist
 
-## API Reference
+| Expected             | Actual                                         |
+| -------------------- | ---------------------------------------------- |
+| `Search`             | `SearchNormal`, `SearchStatus`, `SearchZoomIn` |
+| `Delete`             | `Trash`                                        |
+| `Loading`, `Spinner` | `Refresh`, `RotateLeft`, `RotateRight`         |
+| `Warning`            | `Warning2`                                     |
+| `Info`               | `InfoCircle`, `Information`                    |
+| `Close`              | `CloseCircle`, `CloseSquare`                   |
+| `Bitcoin`            | `BitcoinBtc`, `BitcoinCard`, `BitcoinConvert`  |
 
-### `<SvgIcon />`
+### Misspellings that are part of the name
 
-The main component for rendering icons.
+These are the correct spellings as shipped. The "corrected" version will not
+compile:
 
-#### Props
+`MinusCirlce` · `UserCirlceAdd` · `SendSqaure2` · `MonitorMobbile` ·
+`Battery3full` · `BrifecaseCross` · `BrifecaseTick` · `BrifecaseTimer`
 
-| Prop        | Type                                | Default     | Description                                      |
-| ----------- | ----------------------------------- | ----------- | ------------------------------------------------ |
-| `type`      | `'filled' \| 'outline'`             | Required    | The icon variant to render                       |
-| `name`      | `FilledIconName \| OutlineIconName` | Required    | The name of the icon (type-safe based on `type`) |
-| `size`      | `number`                            | `24`        | The size of the icon in pixels                   |
-| `color`     | `string`                            | `'#000000'` | The color of the icon                            |
-| `svgProps`  | `SvgProps`                          | `undefined` | Additional props to pass to the SVG component    |
-| `pathProps` | `PathProps`                         | `undefined` | Additional props to pass to the Path component   |
-| `animate`   | `AnimateSVGPathComponentProps`      | `undefined` | Animation configuration (see Animation section)  |
+`Briefcase` on its own is spelled normally; only its compounds are not.
 
-### Type Exports
+### Other conventions
+
+- Numeric suffixes mark variants, not sizes — `Home`, `Home1`, `Home2` and
+  `HomeHashtag` are four distinct icons.
+- A few names begin lowercase or with a digit: `square`, `dcube`, `dRotate`,
+  `dSquare`, `dCubeScan`, `4Support`.
+- `4Support` is the name to pass, even though its source file is `FourSupport.tsx`.
+
+### Variant coverage
+
+994 names exist in both variants. Three do not:
+
+| `filled` only           | `outline` only          |
+| ----------------------- | ----------------------- |
+| `ArrowPointCircleup`    | `ArrowPointCircleUp`    |
+| `ArrowPointCircleRight` | `ArrowPointCircleright` |
+| `FlashCircle`           | `FlashCircle2`          |
+
+Anything that switches `type` on a fixed name — a focused tab icon, a
+pressed-state toggle — should avoid these six.
+
+---
+
+## Props
+
+| Prop        | Type                           | Default     | Description                                      |
+| ----------- | ------------------------------ | ----------- | ------------------------------------------------ |
+| `type`      | `'filled' \| 'outline'`        | required    | Variant, and the union `name` is checked against |
+| `name`      | `IconNameByType[T]`            | required    | Icon name                                        |
+| `size`      | `number`                       | `24`        | Width and height, normalised for the device      |
+| `color`     | `string`                       | `'#292D32'` | `fill` on filled icons, `stroke` on outline      |
+| `svgProps`  | `SvgProps`                     | –           | Spread onto the `<Svg>` element                  |
+| `pathProps` | `PathProps`                    | –           | Spread onto every `<Path>` in the icon           |
+| `animate`   | `AnimateSVGPathComponentProps` | –           | See [Animation](#animation)                      |
+
+Three details worth knowing before you reach for `svgProps` or `pathProps`:
+
+- **`size` is normalised.** It runs through `normalize()` from
+  `@shaquillehinds/react-native-essentials`, which scales against device
+  dimensions. Treat `size` as a design-scale value rather than exact points, and
+  don't compute it from `Dimensions` yourself.
+- **`pathProps` overrides `color`.** It is spread after the fill/stroke
+  attribute. Same for `svgProps` and `size` — `svgProps={{ width: 40 }}` wins.
+  Prefer `color` and `size`.
+- **`pathProps` hits every path.** Outline icons are usually several paths. There
+  is no per-path styling through this API.
+
+The default colour is `#292D32`, a near-black grey. If you need true black, pass
+`color="#000"` explicitly.
+
+---
+
+## Filled vs outline
+
+The two variants are drawn differently, which changes what you can override and
+animate.
+
+|              | `filled` | `outline`       |
+| ------------ | -------- | --------------- |
+| Paths        | One      | Usually several |
+| Coloured via | `fill`   | `stroke`        |
+| Stroke width | –        | `1.5`           |
+| SVG `fill`   | `none`   | `none`          |
+
+Consequences:
+
+- `pathProps={{ fill: 'red' }}` does nothing to an outline icon.
+- `pathProps={{ stroke: 'red' }}` does nothing to a filled icon.
+- Stroke and dash animations only make sense on `outline`; fill animations on
+  `filled`.
+- Adjust outline weight with `pathProps={{ strokeWidth: 2 }}`.
+
+`color` targets the right attribute for the variant automatically — prefer it.
+
+---
+
+## TypeScript
 
 ```tsx
 import type {
-  FilledIconName, // Union type of all filled icon names
-  OutlineIconName, // Union type of all outline icon names
-  IconName, // Union of both filled and outline names
+  FilledIconName, // union of all filled names
+  OutlineIconName, // union of all outline names
+  IconName, // both
   SvgIconType, // 'filled' | 'outline'
-  SvgIconProps, // Component props type
+  SvgIconProps, // component props, generic over type
+  SvgIcon as SvgIconBaseProps,
 } from '@shaquillehinds/react-native-svg-icons';
 ```
 
-## Available Icons
-
-This library includes 997+ icons across various categories:
-
-### Categories
-
-- **UI Elements**: Add, Remove, Edit, Delete, Search, Filter, Menu, Close, etc.
-- **Arrows & Navigation**: Arrow variations in all directions, chevrons, points, swaps
-- **Social Media**: Facebook, Twitter, Instagram, YouTube, LinkedIn, etc.
-- **Crypto**: Bitcoin, Ethereum, various altcoin logos
-- **Shapes**: Circles, squares, triangles, hexagons, etc.
-- **Media**: Play, Pause, Stop, Record, Camera, Video, Music
-- **Communication**: Message, Call, Email, Notification, Chat
-- **Files & Folders**: Document, Folder, Archive, Cloud, Download, Upload
-- **Commerce**: Shopping bag, cart, wallet, card, tag
-- **User & Profile**: User, Profile, Avatar, Account, Team
-- **Time & Calendar**: Clock, Calendar, Timer, Alarm
-- **Location**: Map, Location, GPS, Compass, Globe
-- **Weather**: Sun, Moon, Cloud, Rain, Storm
-- **Security**: Lock, Unlock, Shield, Key, Eye, Scan
-- **Devices**: Mobile, Tablet, Desktop, Laptop, Watch
-- **And many more...**
-
-### Example Icon Names
+### Annotate icon arrays
 
 ```tsx
-// UI Elements
-('Add',
-  'AddCircle',
-  'AddSquare',
-  'Remove',
-  'Edit',
-  'Delete',
-  'Search',
-  'Filter');
-
-// Arrows
-('ArrowUp',
-  'ArrowDown',
-  'ArrowLeft',
-  'ArrowRight',
-  'ArrowChevronUp',
-  'ArrowCircleDown');
-
-// Social Media
-('Facebook', 'Instagram', 'Twitter', 'Youtube', 'Linkedin', 'Tiktok');
-
-// Crypto
-('Bitcoin', 'Ethereum', 'Binance', 'Cardano', 'Polygon', 'Solana');
-
-// Media
-('Play',
-  'Pause',
-  'Stop',
-  'Record',
-  'VolumeUp',
-  'VolumeDown',
-  'Camera',
-  'Video');
-
-// Communication
-('Message',
-  'Messages',
-  'Call',
-  'Calling',
-  'Sms',
-  'Notification',
-  'NotificationBing');
-
-// Files
-('Document', 'Folder', 'FolderOpen', 'Archive', 'CloudAdd', 'CloudDownload');
-
-// Commerce
-('Bag',
-  'ShoppingBag',
-  'ShoppingCart',
-  'Wallet',
-  'Card',
-  'Tag',
-  'TicketDiscount');
-
-// User
-('User', 'Profile', 'ProfileCircle', 'People', 'UserAdd', 'UserRemove');
-
-// Time
-('Clock', 'Calendar', 'Timer', 'Alarm', 'Watch', 'TimeCircle');
-
-// Location
-('Location', 'Map', 'Gps', 'DirectionRight', 'GlobalSearch', 'RouteSquare');
-
-// Security
-('Lock', 'Unlock', 'Shield', 'ShieldTick', 'Eye', 'EyeSlash', 'Scan', 'Key');
+const icons: OutlineIconName[] = [
+  'House',
+  'Airplane',
+  'Bookmark',
+  'RepeatCircle',
+];
 ```
 
-## TypeScript Support
+Without the annotation the array widens to `string[]` and every name in it stops
+being checked — the most common way an invalid name reaches runtime.
 
-This library is built with TypeScript and provides full type safety. Icon names are validated based on the selected type:
+### Keep the generic in wrappers
 
 ```tsx
-// ✅ Valid - 'Heart' exists in filled icons
-<SvgIcon type="filled" name="Heart" />
-
-// ✅ Valid - 'Heart' exists in outline icons
-<SvgIcon type="outline" name="Heart" />
-
-// ❌ TypeScript Error - 'InvalidIcon' doesn't exist
-<SvgIcon type="filled" name="InvalidIcon" />
-
-// Type-safe with generics
-function IconWrapper<T extends SvgIconType>(props: SvgIconProps<T>) {
+function Icon<T extends SvgIconType>(props: SvgIconProps<T>) {
   return <SvgIcon {...props} />;
 }
 ```
 
+Writing `props: SvgIconProps` collapses the union and lets an outline-only name
+pass on `type="filled"`.
+
+---
+
 ## Animation
 
-The `animate` prop provides powerful, built-in animation capabilities for your icons. There are two animation modes available:
+Every icon accepts an `animate` prop. Two modes, with different config shapes.
 
-### Animation Modes
+Shared options, both modes:
 
-#### 1. InterpolatePathProps Mode
+| Option          | Type                                            | Default  | Description                       |
+| --------------- | ----------------------------------------------- | -------- | --------------------------------- |
+| `mode`          | `'AnimatedPathProps' \| 'InterpolatePathProps'` | required | Selects the shape below           |
+| `autoStart`     | `boolean`                                       | `false`  | Start on mount                    |
+| `loop`          | `number`                                        | `0`      | `-1` for infinite                 |
+| `returnToStart` | `boolean`                                       | `false`  | Reverse back to the initial state |
+| `ref`           | `AnimateSVGComponentValueRef`                   | –        | Imperative control                |
 
-This mode gives you fine-grained control by providing an `Animated.Value` that you can interpolate to create complex animations. Perfect for custom animations where you need full control over the interpolation.
+### `AnimatedPathProps` — declarative
 
-**Key Features:**
-
-- Direct access to the animated value for interpolation
-- Support for multiple animation stages
-- Full control over timing, spring animations, and easing
-
-**Props:**
-
-- `mode`: `"InterpolatePathProps"`
-- `animationConfig`: Single or array of animation configs (timing/spring)
-- `pathProps`: Function that receives the animated value and returns path properties
-- `autoStart`: Auto-start animation on mount (default: false)
-- `returnToStart`: Return to initial state after animation (default: false)
-- `loop`: Number of times to loop (-1 for infinite, default: 0)
-
-**Example - Color and Stroke Animation:**
+Specify what to animate and its values; interpolation is handled for you. Start
+here.
 
 ```tsx
 <SvgIcon
-  name="FingerScan"
   type="outline"
+  name="Scanning"
+  size={100}
+  animate={{
+    mode: 'AnimatedPathProps',
+    autoStart: true,
+    loop: -1,
+    returnToStart: true,
+    isSequence: false,
+    config: { type: 'timing', duration: 2000, useNativeDriver: false },
+    animatedPathProps: [
+      { name: 'stroke', from: 'red', to: ['green', 'blue'] },
+      { name: 'strokeDasharray', from: '18, 18', to: ['36, 36', '18, 18'] },
+      { name: 'strokeDashoffset', from: 72, to: [18, 36] },
+    ],
+  }}
+/>
+```
+
+| Option              | Type                    | Description                                        |
+| ------------------- | ----------------------- | -------------------------------------------------- |
+| `config`            | timing or spring config | Single config for the whole animation              |
+| `animatedPathProps` | `{ name, from, to }[]`  | Properties to animate; `to` is an array of stages  |
+| `isSequence`        | `boolean`               | Run properties in sequence rather than in parallel |
+
+### `InterpolatePathProps` — manual
+
+Gives you the `Animated.Value` to interpolate yourself. Use when the declarative
+form can't express what you need.
+
+```tsx
+<SvgIcon
+  type="outline"
+  name="FingerScan"
   size={100}
   animate={{
     mode: 'InterpolatePathProps',
@@ -269,202 +285,62 @@ This mode gives you fine-grained control by providing an `Animated.Value` that y
     returnToStart: true,
     pathProps: (value, { inputRange }) => ({
       strokeLinejoin: 'miter',
-      stroke: value.interpolate({
-        inputRange,
-        outputRange: ['red', 'green'],
-      }),
-      strokeDashoffset: value.interpolate({
-        inputRange,
-        outputRange: [36, 0],
-      }),
+      stroke: value.interpolate({ inputRange, outputRange: ['red', 'green'] }),
+      strokeDashoffset: value.interpolate({ inputRange, outputRange: [36, 0] }),
       strokeDasharray: '35, 35',
     }),
     animationConfig: [
-      {
-        type: 'timing',
-        duration: 1000,
-        useNativeDriver: true,
-      },
+      { type: 'timing', duration: 1000, useNativeDriver: false },
     ],
   }}
 />
 ```
 
-**Example - Multi-stage Animation:**
+| Option            | Type                                   | Description                                                  |
+| ----------------- | -------------------------------------- | ------------------------------------------------------------ |
+| `animationConfig` | config or config array                 | One entry per stage; `inputRange` is derived from the length |
+| `pathProps`       | `(value, { inputRange }) => PathProps` | Returns path props from the animated value                   |
+
+Note `animate.pathProps` (a function) is distinct from the top-level `pathProps`
+prop (a static object). Both can be present; the top-level object is applied
+first and the animated result merged over it.
+
+### Config shapes
 
 ```tsx
-<SvgIcon
-  name="Heart"
-  type="filled"
-  size={80}
-  animate={{
-    mode: 'InterpolatePathProps',
-    autoStart: true,
-    loop: -1,
-    pathProps: (value, { inputRange }) => ({
-      fill: value.interpolate({
-        inputRange,
-        outputRange: ['#FF0000', '#FF69B4', '#FF1493', '#FF0000'],
-      }),
-      opacity: value.interpolate({
-        inputRange,
-        outputRange: [0.5, 1, 0.8, 0.5],
-      }),
-    }),
-    animationConfig: [
-      { type: 'timing', duration: 500, useNativeDriver: false },
-      { type: 'timing', duration: 500, useNativeDriver: false },
-      { type: 'timing', duration: 500, useNativeDriver: false },
-    ],
-  }}
-/>
+{ type: 'timing', duration: 1000, delay: 0, easing: Easing.linear, useNativeDriver: false }
+{ type: 'spring', tension: 40, friction: 7, speed: 12, bounciness: 8, useNativeDriver: false }
 ```
 
-#### 2. AnimatedPathProps Mode
+### `useNativeDriver`
 
-This mode provides a simpler, declarative API where you specify which properties to animate and their values. The library handles the interpolation for you.
+Use `false` for `stroke`, `fill`, `opacity` and dash properties — which covers
+most icon animation. `true` is only valid for transform-based animation. The
+native driver cannot animate SVG path attributes, and getting this wrong fails
+silently on one platform and throws on the other.
 
-**Key Features:**
+### Animation applies to every path
 
-- Declarative API - just specify from/to values
-- Animate multiple properties simultaneously or in sequence
-- Support for numeric and string values (colors, dash arrays, etc.)
+Multi-path outline icons animate in lockstep. There is no per-path targeting
+through this API.
 
-**Props:**
-
-- `mode`: `"AnimatedPathProps"`
-- `config`: Animation configuration (timing/spring)
-- `animatedPathProps`: Array of properties to animate
-- `isSequence`: Animate properties in sequence vs parallel (default: false)
-- `autoStart`: Auto-start animation on mount (default: false)
-- `returnToStart`: Return to initial state after animation (default: false)
-- `loop`: Number of times to loop (-1 for infinite, default: 0)
-
-**Example - Parallel Animation:**
-
-```tsx
-<SvgIcon
-  name="Scanning"
-  type="outline"
-  size={100}
-  animate={{
-    mode: 'AnimatedPathProps',
-    autoStart: true,
-    loop: -1,
-    returnToStart: true,
-    config: {
-      type: 'timing',
-      duration: 2000,
-      useNativeDriver: false,
-    },
-    animatedPathProps: [
-      {
-        name: 'stroke',
-        from: 'red',
-        to: ['green', 'blue'],
-      },
-      {
-        name: 'strokeDasharray',
-        from: '18, 18',
-        to: ['36, 36', '18, 18'],
-      },
-      {
-        name: 'strokeDashoffset',
-        from: 72,
-        to: [18, 36],
-      },
-    ],
-  }}
-/>
-```
-
-**Example - Sequential Animation:**
-
-```tsx
-<SvgIcon
-  name="Star"
-  type="filled"
-  size={60}
-  animate={{
-    mode: 'AnimatedPathProps',
-    isSequence: true,
-    autoStart: true,
-    loop: -1,
-    config: {
-      type: 'spring',
-      tension: 40,
-      friction: 7,
-      useNativeDriver: false,
-    },
-    animatedPathProps: [
-      {
-        name: 'fill',
-        from: '#FFD700',
-        to: ['#FFA500', '#FFD700'],
-      },
-      {
-        name: 'opacity',
-        from: 1,
-        to: [0.5, 1],
-      },
-    ],
-  }}
-/>
-```
-
-### Animation Configuration Types
-
-Both modes support two types of animation configs:
-
-#### Timing Animation
-
-```tsx
-{
-  type: "timing",
-  duration: 1000,
-  delay?: 0,
-  easing?: Easing.linear,
-  useNativeDriver: true, // or false for color/transform animations
-}
-```
-
-#### Spring Animation
-
-```tsx
-{
-  type: "spring",
-  tension?: 40,
-  friction?: 7,
-  speed?: 12,
-  bounciness?: 8,
-  useNativeDriver: true, // or false for color/transform animations
-}
-```
-
-### Controlling Animations with Refs
-
-You can control animations programmatically using refs:
+### Imperative control
 
 ```tsx
 import { useRef } from 'react';
 import type { AnimateSVGComponentValueRef } from '@shaquillehinds/react-native-essentials';
 
 function ControlledIcon() {
-  const animationRef = useRef<AnimateSVGComponentValueRef>(null);
-
-  const handleStart = () => animationRef.current?.start();
-  const handleStop = () => animationRef.current?.stop();
-  const handleReset = () => animationRef.current?.reset();
-  const handleReverse = () => animationRef.current?.reverse();
+  const ref = useRef<AnimateSVGComponentValueRef>(null);
 
   return (
     <>
       <SvgIcon
-        name="Play"
         type="filled"
+        name="Play"
         size={60}
         animate={{
-          ref: animationRef,
+          ref,
           mode: 'InterpolatePathProps',
           autoStart: false,
           pathProps: (value) => ({
@@ -480,23 +356,78 @@ function ControlledIcon() {
           },
         }}
       />
-      <Button title="Start" onPress={handleStart} />
-      <Button title="Stop" onPress={handleStop} />
-      <Button title="Reset" onPress={handleReset} />
-      <Button title="Reverse" onPress={handleReverse} />
+      <Button title="Start" onPress={() => ref.current?.start()} />
+      <Button title="Stop" onPress={() => ref.current?.stop()} />
+      <Button title="Reset" onPress={() => ref.current?.reset()} />
+      <Button title="Reverse" onPress={() => ref.current?.reverse()} />
     </>
   );
 }
 ```
 
-### Common Animation Patterns
+The ref type is exported from `@shaquillehinds/react-native-essentials`.
 
-#### Pulsing Effect
+---
+
+## Bundle size
+
+`SvgIcon` resolves names through a registry that statically imports all 1,994 icon
+modules. Importing `SvgIcon` anywhere brings the full set into the bundle —
+unused icons are not tree-shaken away.
+
+In practice the icons are small path strings and the cost is modest, but plan for
+it rather than assuming per-icon shaking. There are currently no per-icon entry
+points; the package exports `SvgIcon` and the name types.
+
+---
+
+## Recipes
+
+### Icon button
+
+```tsx
+<TouchableOpacity onPress={onPress}>
+  <SvgIcon type="filled" name="Heart" size={24} color="#FF0000" />
+</TouchableOpacity>
+```
+
+### Tab bar
+
+```tsx
+function TabBarIcon({ focused, name }: { focused: boolean; name: IconName }) {
+  return (
+    <SvgIcon
+      type={focused ? 'filled' : 'outline'}
+      name={name}
+      size={24}
+      color={focused ? '#007AFF' : '#8E8E93'}
+    />
+  );
+}
+```
+
+Only safe for names present in both variants.
+
+### Icon grid
+
+```tsx
+import type { FilledIconName } from '@shaquillehinds/react-native-svg-icons';
+
+const icons: FilledIconName[] = ['Heart', 'Star', 'User', 'Setting', 'Home'];
+
+<View style={{ flexDirection: 'row', gap: 16 }}>
+  {icons.map((icon) => (
+    <SvgIcon key={icon} type="filled" name={icon} size={32} color="#000" />
+  ))}
+</View>;
+```
+
+### Pulse
 
 ```tsx
 <SvgIcon
-  name="Notification"
   type="filled"
+  name="Notification"
   size={40}
   animate={{
     mode: 'AnimatedPathProps',
@@ -509,178 +440,103 @@ function ControlledIcon() {
 />
 ```
 
-#### Rotating Stroke Dash
+### Draw-on stroke
 
 ```tsx
 <SvgIcon
-  name="Loading"
   type="outline"
-  size={50}
+  name="TickCircle"
+  size={64}
   animate={{
     mode: 'AnimatedPathProps',
     autoStart: true,
-    loop: -1,
-    config: { type: 'timing', duration: 1500, useNativeDriver: false },
-    animatedPathProps: [
-      {
-        name: 'strokeDashoffset',
-        from: 0,
-        to: [100],
-      },
-    ],
+    config: { type: 'timing', duration: 800, useNativeDriver: false },
+    animatedPathProps: [{ name: 'strokeDashoffset', from: 100, to: [0] }],
   }}
 />
 ```
 
-#### Color Wave
+Pair with `pathProps={{ strokeDasharray: '100, 100' }}` to set the dash pattern.
 
-```tsx
-<SvgIcon
-  name="Wave"
-  type="outline"
-  size={80}
-  animate={{
-    mode: 'InterpolatePathProps',
-    autoStart: true,
-    loop: -1,
-    pathProps: (value) => ({
-      stroke: value.interpolate({
-        inputRange: [0, 0.33, 0.66, 1],
-        outputRange: ['#FF0000', '#00FF00', '#0000FF', '#FF0000'],
-      }),
-    }),
-    animationConfig: [
-      { type: 'timing', duration: 3000, useNativeDriver: false },
-    ],
-  }}
-/>
-```
-
-### Performance Notes
-
-- Set `useNativeDriver: true` when animating transform properties for better performance
-- Set `useNativeDriver: false` when animating colors, stroke properties, or opacity
-- For complex animations, consider using `InterpolatePathProps` mode for better control
-- Use `AnimatedPathProps` mode for simpler, declarative animations
-
-## Examples
-
-### Creating an Icon Button
-
-```tsx
-import { TouchableOpacity } from 'react-native';
-import { SvgIcon } from '@shaquillehinds/react-native-svg-icons';
-
-function IconButton({ onPress }: { onPress: () => void }) {
-  return (
-    <TouchableOpacity onPress={onPress}>
-      <SvgIcon type="filled" name="Heart" size={24} color="#FF0000" />
-    </TouchableOpacity>
-  );
-}
-```
-
-### Tab Bar Icons
-
-```tsx
-import { SvgIcon } from '@shaquillehinds/react-native-svg-icons';
-
-function TabBarIcon({
-  focused,
-  name,
-}: {
-  focused: boolean;
-  name: 'Home' | 'Search' | 'Profile';
-}) {
-  return (
-    <SvgIcon
-      type={focused ? 'filled' : 'outline'}
-      name={name}
-      size={24}
-      color={focused ? '#007AFF' : '#8E8E93'}
-    />
-  );
-}
-```
-
-### Dynamic Icon List
-
-```tsx
-import { View } from 'react-native';
-import { SvgIcon } from '@shaquillehinds/react-native-svg-icons';
-import type { FilledIconName } from '@shaquillehinds/react-native-svg-icons';
-
-function IconGrid() {
-  const icons: FilledIconName[] = ['Heart', 'Star', 'User', 'Setting', 'Home'];
-
-  return (
-    <View style={{ flexDirection: 'row', gap: 16 }}>
-      {icons.map((icon) => (
-        <SvgIcon key={icon} type="filled" name={icon} size={32} color="#000" />
-      ))}
-    </View>
-  );
-}
-```
-
-### Animated Icons
-
-See the [Animation](#animation) section for comprehensive examples of animating icons with the built-in `animate` prop.
-
-## Performance Tips
-
-1. **Avoid Inline Styles**: Define styles outside of render functions
-2. **Memoize Icon Components**: Use `React.memo` for frequently re-rendered icons
-3. **Use Appropriate Sizes**: Stick to common sizes (16, 20, 24, 32, 48) for better caching
-4. **Tree Shaking**: Only imported icons are included in your bundle
-
-```tsx
-import { memo } from 'react';
-import { SvgIcon } from '@shaquillehinds/react-native-svg-icons';
-
-const MemoizedIcon = memo(SvgIcon);
-
-// Use MemoizedIcon for better performance
-<MemoizedIcon type="filled" name="Heart" size={24} color="#FF0000" />;
-```
+---
 
 ## Troubleshooting
 
-### Icons not displaying
+**Nothing renders where an icon should be.** Almost always a bad name. An unknown
+`type` or `name` logs through `console.error` and returns `null` — it does not
+throw. Check the console, then verify with `npx rnsi-icons <fragment>`.
 
-1. Ensure `react-native-svg` is properly installed and linked
-2. For iOS, run `pod install` in the ios directory
-3. Rebuild your app after installation
+**TypeScript rejects a name that looks right.** Check the misspelling list, and
+check whether the name exists in the variant you passed to `type`
+(`npx rnsi-icons --diff`).
 
-### TypeScript errors with icon names
+**Icon renders at the wrong size.** `size` is normalised for the device, so it
+won't match physical points exactly. Also check nothing is passing `width` or
+`height` through `svgProps`, which overrides it.
 
-1. Ensure you're using the correct icon name (check the available icons list)
-2. Verify the icon exists for the specified type (`filled` or `outline`)
-3. Update your TypeScript version if you see unexpected errors
+**`color` has no effect.** Something in `pathProps` is overriding it — it is
+spread last. Also check you aren't setting `fill` on an outline icon or `stroke`
+on a filled one.
 
-### Size or color not applying
+**Animation doesn't run.** `autoStart` defaults to `false`. If it is set, check
+`useNativeDriver` is `false` for colour, stroke, opacity and dash animation.
 
-1. Verify you're passing valid numeric values for `size`
-2. Ensure color values are valid CSS color strings
-3. Check if parent components are overriding styles
+**Animation config is ignored.** The two modes use different keys —
+`AnimatedPathProps` takes `config` and `animatedPathProps`, `InterpolatePathProps`
+takes `animationConfig` and a `pathProps` function. Mixing them silently drops
+the unrecognised half.
 
-## Contributing
+**Icons missing entirely after install.** Confirm `react-native-svg` is linked,
+run `pod install` on iOS, and rebuild — a Metro reload is not enough for a new
+native dependency.
 
-Contributions are welcome! Please ensure:
+---
 
-- Icons follow the existing naming convention
-- Both filled and outline variants are provided
-- Types are auto-generated using the provided scripts
-- Examples are updated if adding new categories
+## AI agent rules
+
+The package ships a rules file written for AI coding agents (Claude Code, Cursor,
+Codex, Copilot, etc.) at `rules/AGENT_RULES.md`. It tells an agent to verify every
+icon name against the shipped type union instead of guessing one, spells out the
+misspelled names and variant mismatches it would otherwise "correct", and
+documents both animation modes so it cannot mix their config keys. Point your
+agent at it with any of the following.
+
+**Copy it into your project (recommended)**
+
+```sh
+npx rnsi-rules            # writes ./AGENTS.md
+npx rnsi-rules cursor     # writes ./.cursor/rules/react-native-svg-icons.mdc (alwaysApply)
+npx rnsi-rules claude     # writes ./.claude/rules/react-native-svg-icons.md
+npx rnsi-rules codex      # writes ./.codex/rules/react-native-svg-icons.md
+npx rnsi-rules copilot    # writes ./.github/instructions/react-native-svg-icons.instructions.md
+npx rnsi-rules windsurf   # writes ./.windsurf/rules/react-native-svg-icons.md
+npx rnsi-rules docs/ai/svg-icons.md   # custom path
+```
+
+Add `--force` to overwrite an existing file. `--print` writes the rules to stdout
+instead of to disk. Re-run after upgrading the package to pick up rule changes.
+
+**Reference it without copying (Claude Code)**
+
+`CLAUDE.md` supports `@path` imports, so a single line keeps the rules in sync with
+the installed version:
+
+```md
+# CLAUDE.md
+
+@node_modules/@shaquillehinds/react-native-svg-icons/rules/AGENT_RULES.md
+```
+
+**Reference it from a generic `AGENTS.md`**
+
+```md
+Before using any icon, read and follow
+node_modules/@shaquillehinds/react-native-svg-icons/rules/AGENT_RULES.md.
+Never guess an icon name — verify it with `npx rnsi-icons <query>`.
+```
+
+---
 
 ## License
 
 MIT
-
-## Credits
-
-Icons curated and optimized for React Native. Built with TypeScript and `react-native-svg`.
-
----
-
-**Made with ❤️ for the React Native community**

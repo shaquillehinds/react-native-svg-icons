@@ -22,12 +22,18 @@
       }
     }
   },
+  "bin": {
+    "rnsi-rules": "./bin/install-rules.js",
+    "rnsi-icons": "./bin/find-icon.js"
+  },
   "files": [
     "lib",
     "src",
     "android",
     "ios",
     "cpp",
+    "rules",
+    "bin",
     "*.podspec",
     "react-native.config.js",
     "!ios/build",
